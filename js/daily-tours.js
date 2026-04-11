@@ -2,7 +2,7 @@ const dayTours = [
   {
     id: 1,
     title: "Kuza Cave Jambiani",
-    img: "img/c (51).jpeg",
+    img: "../img/c (51).jpeg",
     duration: "3 hours",
     rating: "5-Star",
     description: "Uncover the Magic of Kuza Cave Today!..",
@@ -41,7 +41,7 @@ const dayTours = [
   {
     id: 2,
     title: "Blue Lagoon Snorkeling Trip Zanzibar",
-    img: "img/Blue Lagoon Zanzibar.jpeg",
+    img: "../img/Blue Lagoon Zanzibar.jpeg",
     duration: "3 hours",
     rating: "5-Star",
     description: "Blue lagoon snorkeling tour..",
@@ -79,7 +79,7 @@ const dayTours = [
   {
     id: 3,
     title: "Nungwi Village Tour",
-    img: "img/c (98).jpeg",
+    img: "../img/c (98).jpeg",
     duration: "3 hours",
     rating: "5-Star",
     description: "nungwi village tour..",
@@ -113,7 +113,7 @@ const dayTours = [
   {
     id: 4,
     title: "Salaam Cave Tour",
-    img: "img/c (259).jpeg",
+    img: "../img/c (259).jpeg",
     duration: "2 hours",
     rating: "5-Star",
     description: "Swim with Zanzibar’s majestic sea turtles in clear waters.",
@@ -151,7 +151,7 @@ const dayTours = [
   {
     id: 5,
     title: "Mtende Beach Escape",
-    img: "img/c (260).jpeg",
+    img: "../img/c (260).jpeg",
     duration: "Half Day",
     rating: "5-Star",
     description: "Relax on Zanzibar’s serene and picturesque Mtende Beach.",
@@ -189,7 +189,7 @@ const dayTours = [
   {
     id: 6,
     title: "Kae Funk Sunset Experience",
-    img: "img/c (261).jpeg",
+    img: "../img/c (261).jpeg",
     duration: "2 hours",
     rating: "5-Star",
     description: "Relax and enjoy Zanzibar’s most peaceful sunset spot.",
@@ -227,7 +227,7 @@ const dayTours = [
   {
     id: 7,
     title: "Full Day North Coast Relaxation",
-    img: "img/Full Day North Coast Nungwi Relaxation.jpeg",
+    img: "../img/Full Day North Coast Nungwi Relaxation.jpeg",
     duration: "Full Day",
     rating: "5-Star",
     description: "full day nungwi relaxation..",
@@ -259,7 +259,7 @@ const dayTours = [
   {
     id: 8,
     title: "Spice Tour with Cooking Class",
-    img: "img/c (210).jpeg",
+    img: "../img/c (210).jpeg",
     duration: "3 hours",
     rating: "5-Star",
     description: "spice tour and cooking class..",

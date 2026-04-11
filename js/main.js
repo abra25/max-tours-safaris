@@ -1,22 +1,22 @@
 const heroSlides = [
   {
-    img: "img/c (262).jpeg",
+    img: "img/c (24).jpeg",
     title: "Discover the beauty of Zanzibar & Tanzania"
   },
   {
-    img: "img/c (263).jpeg",
+    img: "img/c (186).jpeg",
     title: "Authentic Tours Across Zanzibar"
   },
   {
-    img: "img/c (264).jpeg",
+    img: "img/c (177).jpeg",
     title: "Adventure, Culture & Beach Escapes"
   },
   {
-    img: "img/c (265).jpeg",
+    img: "img/c (277).jpeg",
     title: "Explore Tanzania's Natural Wonders"
   },
   {
-    img: "img/c (266).jpeg",
+    img: "img/c (241).jpeg",
     title: "Create Unforgettable Travel Memories"
   }
 ];
@@ -119,35 +119,72 @@ let aboutIndex = 0;
 let attractionIndex = 0;
 let testimonialIndex = 0;
 
-// Mobile menu
-menuToggle.addEventListener("click", function () {
-  mainNav.classList.toggle("active");
-});
+/* Mobile menu */
+if (menuToggle && mainNav) {
+  menuToggle.addEventListener("click", function () {
+    mainNav.classList.toggle("active");
+  });
+}
 
-// Hero slider
+/* Hero slider */
+function animateHeroText() {
+  if (!heroTitle) return;
+
+  heroTitle.style.animation = "none";
+  void heroTitle.offsetWidth;
+  heroTitle.style.animation = "heroTextRise 1s ease 0.2s both";
+}
+
+function animateHeroSubtext() {
+  const heroText = document.querySelector(".hero-content p");
+  const heroBtn = document.querySelector(".hero-content .btn-primary");
+
+  if (heroText) {
+    heroText.style.animation = "none";
+    void heroText.offsetWidth;
+    heroText.style.animation = "heroTextRise 1s ease 0.36s both";
+  }
+
+  if (heroBtn) {
+    heroBtn.style.animation = "none";
+    void heroBtn.offsetWidth;
+    heroBtn.style.animation = "heroTextRise 1s ease 0.5s both";
+  }
+}
+
 function updateHeroSlide() {
-  heroSlider.style.backgroundImage = `url("${heroSlides[heroIndex].img}")`;
+  if (!heroSlider || !heroTitle) return;
+
+  heroSlider.style.backgroundImage = `url('${heroSlides[heroIndex].img}')`;
   heroTitle.textContent = heroSlides[heroIndex].title;
+
+  animateHeroText();
+  animateHeroSubtext();
 }
 
 function startHeroSlider() {
   updateHeroSlide();
+
   setInterval(() => {
     heroIndex = (heroIndex + 1) % heroSlides.length;
     updateHeroSlide();
-  }, 4000);
+  }, 5200);
 }
 
-// About image slider
+/* About image slider */
 function startAboutSlider() {
+  if (!aboutMainImage) return;
+
   setInterval(() => {
     aboutIndex = (aboutIndex + 1) % aboutImages.length;
     aboutMainImage.src = aboutImages[aboutIndex];
-  }, 3000);
+  }, 3200);
 }
 
-// Attractions
+/* Attractions */
 function updateAttraction() {
+  if (!attractionImage || !attractionTitle || !attractionDesc || !attractionDetails) return;
+
   const item = attractions[attractionIndex];
   attractionImage.src = item.image;
   attractionImage.alt = item.title;
@@ -156,23 +193,31 @@ function updateAttraction() {
   attractionDetails.textContent = item.details;
 }
 
-prevAttractionBtn.addEventListener("click", function () {
-  attractionIndex = (attractionIndex - 1 + attractions.length) % attractions.length;
-  updateAttraction();
-});
+if (prevAttractionBtn) {
+  prevAttractionBtn.addEventListener("click", function () {
+    attractionIndex = (attractionIndex - 1 + attractions.length) % attractions.length;
+    updateAttraction();
+  });
+}
 
-nextAttractionBtn.addEventListener("click", function () {
-  attractionIndex = (attractionIndex + 1) % attractions.length;
-  updateAttraction();
-});
+if (nextAttractionBtn) {
+  nextAttractionBtn.addEventListener("click", function () {
+    attractionIndex = (attractionIndex + 1) % attractions.length;
+    updateAttraction();
+  });
+}
 
-attractionMoreBtn.addEventListener("click", function () {
-  const item = attractions[attractionIndex];
-  openModal(item.title, item.image, item.details);
-});
+if (attractionMoreBtn) {
+  attractionMoreBtn.addEventListener("click", function () {
+    const item = attractions[attractionIndex];
+    openModal(item.title, item.image, item.details);
+  });
+}
 
-// Testimonials
+/* Testimonials */
 function updateTestimonial() {
+  if (!testimonialImage || !testimonialText || !testimonialAuthor || !testimonialMeta) return;
+
   const item = testimonials[testimonialIndex];
   testimonialImage.src = item.image;
   testimonialImage.alt = item.author;
@@ -182,15 +227,19 @@ function updateTestimonial() {
 }
 
 function startTestimonialSlider() {
+  if (!testimonialImage) return;
+
   updateTestimonial();
   setInterval(() => {
     testimonialIndex = (testimonialIndex + 1) % testimonials.length;
     updateTestimonial();
-  }, 4000);
+  }, 4200);
 }
 
-// Modal
+/* Modal */
 function openModal(title, image, text) {
+  if (!modal || !modalContent) return;
+
   modalContent.innerHTML = `
     <div class="modal-body-custom">
       <img src="${image}" alt="${title}" />
@@ -205,12 +254,23 @@ function openModal(title, image, text) {
   const bookFromModalBtn = document.getElementById("bookFromModalBtn");
   if (bookFromModalBtn) {
     bookFromModalBtn.addEventListener("click", function () {
-      document.getElementById("contact-subject").value = `Booking: ${title}`;
-      document.getElementById("contact-message").value =
-        `Hello, I am interested in ${title}. Please provide more information.`;
+      const subjectInput = document.getElementById("contact-subject");
+      const messageInput = document.getElementById("contact-message");
+      const contactSection = document.getElementById("contact");
+
+      if (subjectInput) {
+        subjectInput.value = `Booking: ${title}`;
+      }
+
+      if (messageInput) {
+        messageInput.value = `Hello, I am interested in ${title}. Please provide more information.`;
+      }
 
       modal.classList.remove("active");
-      document.getElementById("contact").scrollIntoView({ behavior: "smooth" });
+
+      if (contactSection) {
+        contactSection.scrollIntoView({ behavior: "smooth" });
+      }
     });
   }
 }
@@ -224,36 +284,59 @@ document.querySelectorAll(".open-modal").forEach((button) => {
   });
 });
 
-modalClose.addEventListener("click", function () {
-  modal.classList.remove("active");
-});
-
-modal.addEventListener("click", function (e) {
-  if (e.target === modal) {
+if (modalClose && modal) {
+  modalClose.addEventListener("click", function () {
     modal.classList.remove("active");
+  });
+
+  modal.addEventListener("click", function (e) {
+    if (e.target === modal) {
+      modal.classList.remove("active");
+    }
+  });
+}
+
+/* Contact form demo */
+if (contactForm) {
+  contactForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById("contact-name")?.value.trim();
+    const email = document.getElementById("contact-email")?.value.trim();
+    const subject = document.getElementById("contact-subject")?.value.trim();
+    const message = document.getElementById("contact-message")?.value.trim();
+
+    if (!name || !email || !subject || !message) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    alert("Form submitted successfully. Later we can connect this to your real backend or another method.");
+    contactForm.reset();
+  });
+}
+
+
+
+//update year 
+function setCurrentYear() {
+  const yearEl = document.getElementById("currentYear");
+  if (yearEl) {
+    yearEl.textContent = new Date().getFullYear();
   }
-});
+}
 
-// Contact form demo
-contactForm.addEventListener("submit", function (e) {
-  e.preventDefault();
-
-  const name = document.getElementById("contact-name").value.trim();
-  const email = document.getElementById("contact-email").value.trim();
-  const subject = document.getElementById("contact-subject").value.trim();
-  const message = document.getElementById("contact-message").value.trim();
-
-  if (!name || !email || !subject || !message) {
-    alert("Please fill in all fields.");
-    return;
+function initLucideIcons() {
+  if (window.lucide) {
+    lucide.createIcons();
   }
+}
 
-  alert("Form submitted successfully. Later we can connect this to your real backend or another method.");
-  contactForm.reset();
-});
 
-// Start
+/* Start */
 updateAttraction();
 startHeroSlider();
 startAboutSlider();
 startTestimonialSlider();
+setCurrentYear();
+initLucideIcons();

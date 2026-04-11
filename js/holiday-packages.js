@@ -2,7 +2,7 @@ const packages = [
   {
     id: 1,
     title: "Zanzibar 8-Day Tour",
-    img: "img/c (267).jpeg",
+    img: "../img/c (267).jpeg",
     duration: "8 Days",
     rating: "Holiday Package",
     summary:
@@ -65,7 +65,7 @@ const packages = [
   {
     id: 2,
     title: "Pacchetto Escursioni Zanzibar – 5 Giorni (Tour Privati)",
-    img: "img/c (191).jpeg",
+    img: "../img/c (191).jpeg",
     duration: "5 Days",
     rating: "Private Tour Package",
     summary:

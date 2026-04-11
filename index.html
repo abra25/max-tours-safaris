@@ -6,6 +6,7 @@
   <title>Max Tour & Safari</title>
   <link rel="icon" type="image/png" href="img/favicon.jpeg" />
   <link rel="stylesheet" href="css/style.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
   <!-- Header -->
@@ -24,10 +25,9 @@
         <a href="#home">Home</a>
         <a href="page/daily-tours.html">Daily Tours</a>
         <a href="page/holiday-packages.html">Holiday Tours</a>
-        <a href="visit-tanzania.html">Visit Tanzania</a>
-        <a href="visit-zanzibar.html">Visit Zanzibar</a>
-        <a href="agents.html">Agents</a>
-        <a href="gallery.html">Gallery</a>
+        <a href="page/visit-zanzibar.html">Visit Zanzibar</a>
+        <a href="page/agents.html">Agents</a>
+        <a href="page/gallary.html">Gallery</a>
         <a href="#contact">Contact</a>
       </nav>
     </div>
@@ -35,15 +35,15 @@
 
   <!-- Hero -->
   <section class="hero" id="home">
-    <div class="hero-slider" id="heroSlider">
-      <div class="hero-overlay"></div>
-      <div class="hero-content wrapper">
-        <h1 id="heroTitle">Discover the beauty of Zanzibar & Tanzania</h1>
-        <p>Authentic African Tours & Experiences</p>
-        <a href="#destinations" class="btn-primary">Explore Tours</a>
-      </div>
+  <div class="hero-slider" id="heroSlider">
+    <div class="hero-overlay"></div>
+    <div class="hero-content wrapper">
+      <h1 id="heroTitle">Discover the beauty of Zanzibar & Tanzania</h1>
+      <p>Authentic African Tours & Experiences</p>
+      <a href="#destinations" class="btn-primary">Explore Tours</a>
     </div>
-  </section>
+  </div>
+</section>
 
   <!-- About -->
   <section class="section" id="about">
@@ -111,7 +111,7 @@
 
       <div class="attraction-view" id="attractionView">
         <div class="attraction-image">
-          <img id="attractionImage" src="img/IMG_098_22. (18).jpg" alt="Serengeti National Park" />
+          <img id="attractionImage" src="img/IMG_098_22. (18)" alt="Serengeti National Park" />
         </div>
 
         <div class="attraction-info">
@@ -409,21 +409,35 @@
         </ul>
 
         <div class="social-links">
-          <a href="https://wa.me/255689840637" target="_blank">WhatsApp</a>
-          <a href="https://www.facebook.com/profile.php?id=61561055606916" target="_blank">Facebook</a>
-          <a href="https://www.instagram.com/zakayo3838?igsh=eDNiMmRlbWF5MHlu" target="_blank">Instagram</a>
-          <a href="https://tiktok.com/@max.tours.safari" target="_blank">TikTok</a>
+           <a href="https://wa.me/255689840637" target="_blank" class="social-link" aria-label="WhatsApp">
+                <i data-lucide="message-circle"></i>
+                <span>WhatsApp</span>
+            </a>
+
+           <a href="https://www.facebook.com/profile.php?id=61561055606916" target="_blank" class="social-link" aria-label="Facebook">
+                <i data-lucide="thumbs-up"></i>
+                <span>Facebook</span>
+            </a>
+
+            <a href="https://www.instagram.com/zakayo3838?igsh=eDNiMmRlbWF5MHlu" target="_blank" class="social-link" aria-label="Instagram">
+                <i data-lucide="camera"></i>
+                <span>Instagram</span>
+            </a>
+
+            <a href="https://tiktok.com/@max.tours.safari" target="_blank" class="social-link" aria-label="TikTok">
+                <i data-lucide="music-2"></i>
+                <span>TikTok</span>
+            </a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="wrapper">
-      <p>&copy; 2026 Max Tour & Safari. All rights reserved.</p>
-    </div>
-  </footer>
+<footer class="site-footer" style="text-align: center;">
+  <div class="wrapper">
+    <p>&copy; <span id="currentYear"></span> Max Tour & Safari. All rights reserved.</p>
+  </div>
+</footer>
 
   <!-- Modal -->
   <div class="modal" id="siteModal">
@@ -432,7 +446,7 @@
       <div id="modalContent"></div>
     </div>
   </div>
-
+   
   <script src="js/main.js"></script>
 </body>
 </html>

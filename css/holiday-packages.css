@@ -98,7 +98,7 @@ a {
 .page-hero {
   position: relative;
   min-height: 58vh;
-  background: url("img/c (267).jpeg") center/cover no-repeat;
+  background: url("../img/beach-2.jpg") center/cover no-repeat;
   display: flex;
   align-items: center;
 }

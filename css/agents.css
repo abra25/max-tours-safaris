@@ -1,0 +1,143 @@
+body {
+  font-family: Arial;
+  margin: 0;
+}
+
+/* NAV */
+.site-header {
+  background: #8d5524;
+}
+
+.nav-wrap {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+}
+
+.brand img {
+  width: 40px;
+}
+
+.main-nav {
+  display: flex;
+  gap: 15px;
+}
+
+.main-nav a {
+  color: white;
+  text-decoration: none;
+}
+
+.main-nav a.active {
+  color: gold;
+}
+
+.menu-toggle {
+  display: none;
+}
+
+/* HERO */
+.hero {
+  height: 50vh;
+  background: url("../img/g6.jpeg") center/cover;
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+}
+
+.hero-content {
+  color: white;
+  text-align: center;
+  position: relative;
+  top: 40%;
+}
+
+/* SECTION */
+.section {
+  padding: 60px 20px;
+}
+
+.wrapper {
+  max-width: 1100px;
+  margin: auto;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+/* FEATURES */
+.features {
+  list-style: none;
+  padding: 0;
+}
+
+.features li {
+  margin: 10px 0;
+}
+
+/* CARD */
+.card {
+  background: #f5f5f5;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+/* CTA */
+.cta {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.contact-box {
+  margin: 20px 0;
+}
+
+.btn {
+  background: #c68642;
+  color: white;
+  padding: 12px 20px;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+/* FOOTER */
+.footer {
+  background: #222;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .main-nav {
+    display: none;
+    flex-direction: column;
+  }
+
+  .main-nav.active {
+    display: flex;
+  }
+}
