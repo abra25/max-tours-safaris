@@ -243,7 +243,8 @@ a {
 
 .about-images img {
   width: 100%;
-  min-height: 520px;
+  height: 400px;
+  max-height: 400px;
   object-fit: cover;
   border-radius: 18px;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
