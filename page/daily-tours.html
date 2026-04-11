@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="img/favicon.jpeg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Tours - Max Tour & Safari</title>
+  <meta
+    name="description"
+    content="Explore our best day tours in Zanzibar and Tanzania with Max Tour & Safari."
+  />
+  <link rel="stylesheet" href="../css/daily-tours.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrapper nav-wrap">
+      <a href="index.html" class="brand">
+        <img src="img/next.jpeg" alt="Max Tour & Safari Logo" />
+        <span>Max Tour & Safari</span>
+      </a>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Open Menu">☰</button>
+
+      <nav class="main-nav" id="mainNav">
+        <a href="index.html">Home</a>
+        <a href="daily-tours.html" class="active">Day Tours</a>
+        <a href="holiday-packages.html">Holiday Packages</a>
+        <a href="visit-zanzibar.html">Visit Zanzibar</a>
+        <a href="visit-tanzania.html">Visit Tanzania</a>
+        <a href="agents.html">Agents</a>
+        <a href="gallery.html">Gallery</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="page-hero">
+    <div class="page-hero-overlay"></div>
+    <div class="wrapper page-hero-content">
+      <span class="eyebrow">Zanzibar Experiences</span>
+      <h1>Day Tours</h1>
+      <h2>Best Activities in Zanzibar</h2>
+      <p>
+        Looking for the best things to do in Zanzibar? We organize private day tours and
+        local experiences including cave visits, snorkeling trips, village tours, beach
+        escapes, spice experiences, and more.
+      </p>
+    </div>
+  </section>
+
+  <section class="section tours-section">
+    <div class="wrapper">
+      <div class="section-head">
+        <h2>Choose Your Tour</h2>
+        <p>Browse our handpicked daily experiences and open any card for full details.</p>
+      </div>
+
+      <div class="tour-grid" id="tourGrid"></div>
+
+      <div class="tour-note">
+        <h3>Why book a day tour with Max Tour & Safari?</h3>
+        <p>
+          We focus on memorable local experiences, smooth planning, and flexible booking.
+          Each day tour includes clear highlights, itinerary steps, and essentials so the
+          guest understands the experience before booking.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="wrapper footer-inner">
+      <p><strong>Max Tour & Safari</strong></p>
+      <p>Email: info@maxtourandsafari.co.tz | Phone: +255 689 840 637</p>
+      <p>&copy; 2026 Max Tour & Safari. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <div class="modal" id="tourModal">
+    <div class="modal-box">
+      <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+
+      <div class="modal-media">
+        <img id="modalImage" src="" alt="" />
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-top">
+          <h3 id="modalTitle"></h3>
+          <p class="modal-meta" id="modalMeta"></p>
+          <p class="modal-overview" id="modalOverview"></p>
+        </div>
+
+        <div class="modal-tabs">
+          <button class="tab-btn active" data-tab="details">Details</button>
+          <button class="tab-btn" data-tab="itinerary">Itinerary</button>
+          <button class="tab-btn" data-tab="included">Included</button>
+        </div>
+
+        <div class="tab-panel active" id="tab-details">
+          <div id="modalDetails"></div>
+        </div>
+
+        <div class="tab-panel" id="tab-itinerary">
+          <div id="modalItinerary"></div>
+        </div>
+
+        <div class="tab-panel" id="tab-included">
+          <div class="included-wrap">
+            <div class="duration-row">
+              <strong>Duration:</strong>
+              <span id="modalDuration"></span>
+            </div>
+            <div id="modalInclusions"></div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn btn-light" id="modalBackBtn">Back</button>
+          <a href="index.html#contact" class="btn btn-primary" id="modalBookBtn">Book Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/daily-tours.js"></script>
+</body>
+</html>
