@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Max Tour & Safari</title>
+  <link rel="icon" type="image/png" href="img/" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="wrapper nav-wrap">
+      <a href="#home" class="brand">
+        <img src="img/next.jpeg" alt="Max Tour & Safari Logo" />
+        <span>Max Tour & Safari</span>
+      </a>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Open Menu">
+        ☰
+      </button>
+
+      <nav class="main-nav" id="mainNav">
+        <a href="#home">Home</a>
+        <a href="daily-tours.html">Daily Tours</a>
+        <a href="holiday-packages.html">Holiday Tours</a>
+        <a href="visit-tanzania.html">Visit Tanzania</a>
+        <a href="visit-zanzibar.html">Visit Zanzibar</a>
+        <a href="agents.html">Agents</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="home">
+    <div class="hero-slider" id="heroSlider">
+      <div class="hero-overlay"></div>
+      <div class="hero-content wrapper">
+        <h1 id="heroTitle">Discover the beauty of Zanzibar & Tanzania</h1>
+        <p>Authentic African Tours & Experiences</p>
+        <a href="#destinations" class="btn-primary">Explore Tours</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="section" id="about">
+    <div class="wrapper two-col">
+      <div class="about-images">
+        <img id="aboutMainImage" src="img/g.jpeg" alt="About Max Tour & Safari" />
+      </div>
+
+      <div class="about-text">
+        <h2>Chi Siamo — Benvenuti a Max Tour & Safari</h2>
+
+        <p>
+          Benvenuti a <strong>Max Tour & Safari</strong>, dove ogni safari è una storia
+          unica che aspetta di essere scritta. Ti portiamo a scoprire la vera bellezza
+          delle attrazioni turistiche, delle culture locali e dei paesaggi mozzafiato
+          attraverso servizi professionali e safari personalizzati in base alle tue esigenze.
+        </p>
+
+        <p>
+          Con oltre 4 anni di esperienza nel settore turistico, offriamo esperienze uniche,
+          organizzate con attenzione, passione e professionalità.
+        </p>
+
+        <h3>I Nostri Servizi</h3>
+        <ul>
+          <li>Safari unici nella natura</li>
+          <li>Tour storici e culturali</li>
+          <li>Tour sull'acqua</li>
+          <li>Snorkeling, immersioni e crociere in barca</li>
+          <li>Tour delle spezie</li>
+          <li>Village Tour</li>
+          <li>Sunset Experience</li>
+          <li>Airport Transfers</li>
+          <li>House Rentals</li>
+        </ul>
+
+        <h3>Lingue Disponibili</h3>
+        <ul>
+          <li>English</li>
+          <li>Spanish</li>
+          <li>French</li>
+          <li>Italian</li>
+          <li>Polish</li>
+          <li>German</li>
+        </ul>
+
+        <h3>Contattaci</h3>
+        <ul class="about-contact-list">
+          <li><strong>Company:</strong> Max Tour & Safari</li>
+          <li><strong>Email:</strong> info@maxtourandsafari.co.tz</li>
+          <li><strong>Contact:</strong> +255689840637</li>
+          <li><strong>Location:</strong> Zanzibar, Tanzania</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Attractions -->
+  <section class="section light-section" id="attractions">
+    <div class="wrapper">
+      <div class="section-title">
+        <h2>Attractions of Tanzania & Zanzibar</h2>
+        <p>Famous attractions: beaches, national parks, and historical sites.</p>
+      </div>
+
+      <div class="attraction-view" id="attractionView">
+        <div class="attraction-image">
+          <img id="attractionImage" src="img/IMG_098_22. (18).jpg" alt="Serengeti National Park" />
+        </div>
+
+        <div class="attraction-info">
+          <h3 id="attractionTitle">Serengeti National Park</h3>
+          <p id="attractionDesc">
+            World-renowned for its annual wildebeest migration, the Serengeti offers vast
+            savannahs teeming with wildlife and unforgettable safari experiences.
+          </p>
+          <p id="attractionDetails">
+            The park is one of Africa’s most iconic destinations and a dream place for wildlife lovers.
+          </p>
+
+          <div class="attraction-controls">
+            <button class="btn-secondary" id="prevAttractionBtn">Previous</button>
+            <button class="btn-primary" id="nextAttractionBtn">Next</button>
+            <button class="btn-primary" id="attractionMoreBtn">View Details</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Destinations -->
+  <section class="section" id="destinations">
+    <div class="wrapper">
+      <div class="section-title">
+        <h2>Destinations & Tours</h2>
+        <p>Explore curated tours and experiences across Tanzania and Zanzibar.</p>
+      </div>
+
+      <div class="card-grid">
+        <article class="card">
+          <img src="img/c (186).jpeg" alt="Blue Lagoon" />
+          <div class="card-body">
+            <h3>Blue Lagoon</h3>
+            <p>
+              Blue Lagoon is a breathtaking snorkeling spot on Zanzibar’s southeast coast,
+              known for turquoise waters and vibrant marine life.
+            </p>
+            <button class="btn-primary open-modal"
+              data-title="Blue Lagoon"
+              data-image="img/c (186).jpeg"
+              data-text="Includes boat ride, snorkeling gear, lunch, and guide. Enjoy an unforgettable marine adventure.">
+              See More
+            </button>
+          </div>
+        </article>
+
+        <article class="card">
+          <img src="img/c (104).jpeg" alt="Jozani Forest" />
+          <div class="card-body">
+            <h3>Jozani Forest</h3>
+            <p>
+              Visit Zanzibar’s famous forest and discover the rare Zanzibar red colobus monkeys
+              in a peaceful tropical setting.
+            </p>
+            <button class="btn-primary open-modal"
+              data-title="Jozani Forest"
+              data-image="img/c (104).jpeg"
+              data-text="Guided forest walk, red colobus monkeys, mangrove boardwalk, and a memorable eco-tour experience.">
+              See More
+            </button>
+          </div>
+        </article>
+
+        <article class="card">
+          <img src="img/c (253).jpeg" alt="Stone Town" />
+          <div class="card-body">
+            <h3>Stone Town</h3>
+            <p>
+              Explore the historic and cultural heart of Zanzibar with its narrow streets,
+              carved doors, and rich heritage.
+            </p>
+            <button class="btn-primary open-modal"
+              data-title="Stone Town"
+              data-image="img/c (253).jpeg"
+              data-text="Walking tour, local guide, entrance fees, and a deep cultural experience in Zanzibar’s UNESCO heritage site.">
+              See More
+            </button>
+          </div>
+        </article>
+
+        <article class="card">
+          <img src="img/c (252).jpeg" alt="Prison Island" />
+          <div class="card-body">
+            <h3>Prison Island</h3>
+            <p>
+              Enjoy a unique excursion to meet giant tortoises, relax by the sea, and explore
+              a beautiful island near Stone Town.
+            </p>
+            <button class="btn-primary open-modal"
+              data-title="Prison Island"
+              data-image="img/c (252).jpeg"
+              data-text="Boat transfer, tortoise sanctuary visit, beautiful scenery, and a memorable island experience.">
+              See More
+            </button>
+          </div>
+        </article>
+
+        <article class="card">
+          <img src="img/c (167).jpeg" alt="Safari Blue" />
+          <div class="card-body">
+            <h3>Safari Blue</h3>
+            <p>
+              A full-day marine adventure featuring dhow cruise, snorkeling, seafood BBQ,
+              tropical fruits, and ocean beauty.
+            </p>
+            <button class="btn-primary open-modal"
+              data-title="Safari Blue"
+              data-image="img/c (167).jpeg"
+              data-text="Dhow cruise, snorkeling, seafood lunch, fruits, drinks, and a full-day marine adventure.">
+              See More
+            </button>
+          </div>
+        </article>
+
+        <article class="card">
+          <img src="img/Mnemba Island.jpeg" alt="Mnemba Island" />
+          <div class="card-body">
+            <h3>Mnemba Island</h3>
+            <p>
+              Experience dolphins, snorkeling, and crystal-clear water near one of Zanzibar’s
+              most beautiful marine areas.
+            </p>
+            <button class="btn-primary open-modal"
+              data-title="Mnemba Island"
+              data-image="img/Mnemba Island.jpeg"
+              data-text="Boat transfer, snorkeling gear, guide, and tropical beach moments near Mnemba Island.">
+              See More
+            </button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Adventures -->
+  <section class="section" id="adventures">
+    <div class="wrapper">
+      <div class="section-title">
+        <h2>Our Travel Adventures</h2>
+        <p>See some of the best travel experiences we have organized.</p>
+      </div>
+
+      <div class="card-grid">
+        <article class="card">
+          <img src="img/c (196).jpeg" alt="Beach Resorts" />
+          <div class="card-body">
+            <h3>Beach Resorts</h3>
+            <p>Relaxing beach escapes with stunning ocean views and tropical vibes.</p>
+          </div>
+        </article>
+
+        <article class="card">
+          <img src="img/c (216).jpeg" alt="Mikumi Park" />
+          <div class="card-body">
+            <h3>Mikumi Park</h3>
+            <p>Wildlife safari moments from one of Tanzania’s most loved parks.</p>
+          </div>
+        </article>
+
+        <article class="card">
+          <img src="img/c (243).jpeg" alt="Village Tour" />
+          <div class="card-body">
+            <h3>Village Tour</h3>
+            <p>Experience local life, traditions, food, and authentic culture.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="section warm-section" id="testimonials">
+    <div class="wrapper">
+      <div class="section-title">
+        <h2>Testimonials</h2>
+      </div>
+
+      <div class="testimonial-slider" id="testimonialSlider">
+        <div class="testimonial-card">
+          <img id="testimonialImage" src="img/1 (1).jpeg" alt="Client testimonial" />
+          <p id="testimonialText">
+            Max Tour & Safari made our trip to Zanzibar unforgettable! Their team made every place come alive.
+          </p>
+          <h4 id="testimonialAuthor">Laisesma</h4>
+          <small id="testimonialMeta">Brazil • January 2025</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blogs -->
+  <section class="section" id="blogs">
+    <div class="wrapper">
+      <div class="section-title">
+        <h2>Blogs</h2>
+      </div>
+
+      <div class="card-grid">
+        <article class="card">
+          <img src="img/why.jpeg" alt="Why Zanzibar Is The Perfect Holiday Destination" />
+          <div class="card-body">
+            <h3>Why Zanzibar Is The Perfect Holiday Destination</h3>
+            <p>
+              Discover why Zanzibar is ideal for adventure, relaxation, culture, and unforgettable tours.
+            </p>
+            <button class="btn-primary open-modal"
+              data-title="Why Zanzibar Is The Perfect Holiday Destination"
+              data-image="img/why.jpeg"
+              data-text="Zanzibar is a paradise for travelers seeking adventure, relaxation, culture, and unforgettable day trips.">
+              Read More
+            </button>
+          </div>
+        </article>
+
+        <article class="card">
+          <img src="img/his.jpeg" alt="Historical Sites" />
+          <div class="card-body">
+            <h3>Historical Sites</h3>
+            <p>
+              Explore Stone Town, the Old Fort, Slave Market, Forodhani, and more.
+            </p>
+            <button class="btn-primary open-modal"
+              data-title="Historical Sites"
+              data-image="img/his.jpeg"
+              data-text="Stone Town is rich in stories, architecture, and heritage, making it one of Zanzibar’s cultural treasures.">
+              Read More
+            </button>
+          </div>
+        </article>
+
+        <article class="card">
+          <img src="img/isl.jpeg" alt="Island Trips" />
+          <div class="card-body">
+            <h3>Island Trips</h3>
+            <p>
+              Enjoy full-day adventures with beaches, dolphins, snorkeling, and cultural visits.
+            </p>
+            <button class="btn-primary open-modal"
+              data-title="Island Trips"
+              data-image="img/isl.jpeg"
+              data-text="Island trips in Zanzibar combine beaches, sea activities, and cultural experiences into one unforgettable journey.">
+              Read More
+            </button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section light-section" id="contact">
+    <div class="wrapper two-col">
+      <div>
+        <h2>Contact Us</h2>
+
+        <form id="contactForm" class="contact-form">
+          <div class="form-group">
+            <label for="contact-name">Your Name</label>
+            <input type="text" id="contact-name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="contact-email">Your Email</label>
+            <input type="email" id="contact-email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="contact-subject">Subject</label>
+            <input type="text" id="contact-subject" required />
+          </div>
+
+          <div class="form-group">
+            <label for="contact-message">Message</label>
+            <textarea id="contact-message" rows="5" required></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary">Send Message</button>
+        </form>
+      </div>
+
+      <div class="contact-info">
+        <h3>Get in Touch</h3>
+        <p>
+          Max Tour & Safari ni mshirika wako bora wa safari na utalii Zanzibar na Tanzania.
+          Kwa maswali, booking, au kushirikiana nasi, wasiliana nasi.
+        </p>
+
+        <ul>
+          <li><strong>Company:</strong> Max Tour & Safari</li>
+          <li><strong>Address:</strong> Zanzibar</li>
+          <li><strong>Contact:</strong> +255689840637</li>
+          <li><strong>Email:</strong> info@maxtourandsafari.co.tz</li>
+        </ul>
+
+        <div class="social-links">
+          <a href="https://wa.me/255689840637" target="_blank">WhatsApp</a>
+          <a href="https://www.facebook.com/profile.php?id=61561055606916" target="_blank">Facebook</a>
+          <a href="https://www.instagram.com/zakayo3838?igsh=eDNiMmRlbWF5MHlu" target="_blank">Instagram</a>
+          <a href="https://tiktok.com/@max.tours.safari" target="_blank">TikTok</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="wrapper">
+      <p>&copy; 2026 Max Tour & Safari. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Modal -->
+  <div class="modal" id="siteModal">
+    <div class="modal-box">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
