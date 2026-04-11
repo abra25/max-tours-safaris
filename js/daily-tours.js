@@ -2,7 +2,7 @@ const dayTours = [
   {
     id: 1,
     title: "Kuza Cave Jambiani",
-    img: "../img/c (51).jpeg",
+    img: "../img/Kuza Cave.jpeg",
     duration: "3 hours",
     rating: "5-Star",
     description: "Uncover the Magic of Kuza Cave Today!..",
