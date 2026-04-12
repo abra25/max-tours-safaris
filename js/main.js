@@ -4,7 +4,7 @@ const heroSlides = [
     title: "Discover the beauty of Zanzibar & Tanzania"
   },
   {
-    img: "img/c (186).jpeg",
+    img: "img/Nakupenda Beach.jpeg",
     title: "Authentic Tours Across Zanzibar"
   },
   {
@@ -12,11 +12,11 @@ const heroSlides = [
     title: "Adventure, Culture & Beach Escapes"
   },
   {
-    img: "img/c (277).jpeg",
+    img: "img/Mount Kilimanjaro National Park.jpeg",
     title: "Explore Tanzania's Natural Wonders"
   },
   {
-    img: "img/g14.jpeg",
+    img: "img/c (51).jpeg",
     title: "Create Unforgettable Travel Memories"
   }
 ];
@@ -89,11 +89,13 @@ const aboutMainImage = document.getElementById("aboutMainImage");
 const attractionImage = document.getElementById("attractionImage");
 const attractionTitle = document.getElementById("attractionTitle");
 const attractionDesc = document.getElementById("attractionDesc");
+const attractionInfo = document.querySelector(".attraction-info");
 
 const testimonialImage = document.getElementById("testimonialImage");
 const testimonialText = document.getElementById("testimonialText");
 const testimonialAuthor = document.getElementById("testimonialAuthor");
 const testimonialMeta = document.getElementById("testimonialMeta");
+const testimonialCard = document.querySelector(".testimonial-card");
 
 const menuToggle = document.getElementById("menuToggle");
 const mainNav = document.getElementById("mainNav");
@@ -161,17 +163,25 @@ function startHeroSlider() {
   }, 5200);
 }
 
-/* About image slider */
+/* About image slider with fade */
 function startAboutSlider() {
   if (!aboutMainImage) return;
 
   setInterval(() => {
-    aboutIndex = (aboutIndex + 1) % aboutImages.length;
-    aboutMainImage.src = aboutImages[aboutIndex];
-  }, 3200);
+    aboutMainImage.classList.add("is-switching");
+
+    setTimeout(() => {
+      aboutIndex = (aboutIndex + 1) % aboutImages.length;
+      aboutMainImage.src = aboutImages[aboutIndex];
+    }, 220);
+
+    setTimeout(() => {
+      aboutMainImage.classList.remove("is-switching");
+    }, 520);
+  }, 3400);
 }
 
-/* Attractions auto slider */
+/* Attractions auto slider with image crossfade + text fade */
 function updateAttraction() {
   if (!attractionImage || !attractionTitle || !attractionDesc) return;
 
@@ -182,18 +192,34 @@ function updateAttraction() {
   attractionDesc.textContent = item.desc;
 }
 
+function transitionAttraction() {
+  if (!attractionImage || !attractionInfo) return;
+
+  attractionImage.classList.add("attraction-fading");
+  attractionInfo.classList.add("is-changing");
+
+  setTimeout(() => {
+    attractionIndex = (attractionIndex + 1) % attractions.length;
+    updateAttraction();
+  }, 280);
+
+  setTimeout(() => {
+    attractionImage.classList.remove("attraction-fading");
+    attractionInfo.classList.remove("is-changing");
+  }, 620);
+}
+
 function startAttractionSlider() {
   if (!attractionImage) return;
 
   updateAttraction();
 
   setInterval(() => {
-    attractionIndex = (attractionIndex + 1) % attractions.length;
-    updateAttraction();
-  }, 4500);
+    transitionAttraction();
+  }, 4800);
 }
 
-/* Testimonials */
+/* Testimonials with fade */
 function updateTestimonial() {
   if (!testimonialImage || !testimonialText || !testimonialAuthor || !testimonialMeta) return;
 
@@ -205,14 +231,29 @@ function updateTestimonial() {
   testimonialMeta.textContent = item.meta;
 }
 
+function transitionTestimonial() {
+  if (!testimonialCard) return;
+
+  testimonialCard.classList.add("is-changing");
+
+  setTimeout(() => {
+    testimonialIndex = (testimonialIndex + 1) % testimonials.length;
+    updateTestimonial();
+  }, 220);
+
+  setTimeout(() => {
+    testimonialCard.classList.remove("is-changing");
+  }, 520);
+}
+
 function startTestimonialSlider() {
   if (!testimonialImage) return;
 
   updateTestimonial();
+
   setInterval(() => {
-    testimonialIndex = (testimonialIndex + 1) % testimonials.length;
-    updateTestimonial();
-  }, 4200);
+    transitionTestimonial();
+  }, 4300);
 }
 
 /* Modal */
