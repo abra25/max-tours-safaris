@@ -16,7 +16,7 @@ const heroSlides = [
     title: "Explore Tanzania's Natural Wonders"
   },
   {
-    img: "img/c (241).jpeg",
+    img: "img/g14.jpeg",
     title: "Create Unforgettable Travel Memories"
   }
 ];
@@ -27,7 +27,6 @@ const aboutImages = [
   "img/g2.jpeg",
   "img/g3.jpeg",
   "img/g4.jpeg",
-  "img/g5.jpeg",
   "img/g6.jpeg",
   "img/g7.jpeg",
   "img/g8.jpeg"
@@ -37,26 +36,22 @@ const attractions = [
   {
     title: "Serengeti National Park",
     image: "img/IMG_098_22. (18).jpg",
-    desc: "World-renowned for its annual wildebeest migration, the Serengeti offers vast savannahs teeming with wildlife and unforgettable safari experiences.",
-    details: "The Serengeti is one of Africa’s most iconic safari destinations, known for wildlife, endless plains, and breathtaking natural beauty."
+    desc: "World-renowned for its annual wildebeest migration, the Serengeti offers vast savannahs teeming with wildlife, golden plains, and unforgettable safari experiences in the heart of Tanzania."
   },
   {
     title: "Zanzibar Archipelago",
     image: "img/Mnemba Atoll Trip.jpeg",
-    desc: "Zanzibar is famed for its white-sand beaches, turquoise waters, and rich Swahili culture.",
-    details: "The islands offer beach relaxation, spice tours, diving, snorkeling, and cultural heritage in one unforgettable destination."
+    desc: "Zanzibar is famed for its white-sand beaches, turquoise waters, rich Swahili culture, and relaxing island atmosphere that makes it one of East Africa’s most loved coastal destinations."
   },
   {
     title: "Ngorongoro Conservation Area",
     image: "img/Ngorongoro creater.jpg",
-    desc: "Famous for the Ngorongoro Crater, this area is a haven for wildlife and Maasai culture.",
-    details: "Ngorongoro combines dramatic scenery, abundant wildlife, and cultural richness, making it a top safari destination."
+    desc: "Famous for the Ngorongoro Crater, this area is a haven for wildlife, dramatic landscapes, and Maasai culture, offering one of the most unique safari settings in Africa."
   },
   {
     title: "Selous / Nyerere National Park",
     image: "img/IMG_098_22. (16).jpg",
-    desc: "One of Africa’s largest protected areas, known for wild landscapes and boat safaris.",
-    details: "Visitors enjoy wildlife viewing, river scenery, and a quieter safari experience away from crowds."
+    desc: "One of Africa’s largest protected areas, known for wild landscapes, rich wildlife, peaceful river scenery, and unique boat safaris away from the crowds."
   }
 ];
 
@@ -94,11 +89,6 @@ const aboutMainImage = document.getElementById("aboutMainImage");
 const attractionImage = document.getElementById("attractionImage");
 const attractionTitle = document.getElementById("attractionTitle");
 const attractionDesc = document.getElementById("attractionDesc");
-const attractionDetails = document.getElementById("attractionDetails");
-
-const prevAttractionBtn = document.getElementById("prevAttractionBtn");
-const nextAttractionBtn = document.getElementById("nextAttractionBtn");
-const attractionMoreBtn = document.getElementById("attractionMoreBtn");
 
 const testimonialImage = document.getElementById("testimonialImage");
 const testimonialText = document.getElementById("testimonialText");
@@ -181,37 +171,26 @@ function startAboutSlider() {
   }, 3200);
 }
 
-/* Attractions */
+/* Attractions auto slider */
 function updateAttraction() {
-  if (!attractionImage || !attractionTitle || !attractionDesc || !attractionDetails) return;
+  if (!attractionImage || !attractionTitle || !attractionDesc) return;
 
   const item = attractions[attractionIndex];
   attractionImage.src = item.image;
   attractionImage.alt = item.title;
   attractionTitle.textContent = item.title;
   attractionDesc.textContent = item.desc;
-  attractionDetails.textContent = item.details;
 }
 
-if (prevAttractionBtn) {
-  prevAttractionBtn.addEventListener("click", function () {
-    attractionIndex = (attractionIndex - 1 + attractions.length) % attractions.length;
-    updateAttraction();
-  });
-}
+function startAttractionSlider() {
+  if (!attractionImage) return;
 
-if (nextAttractionBtn) {
-  nextAttractionBtn.addEventListener("click", function () {
+  updateAttraction();
+
+  setInterval(() => {
     attractionIndex = (attractionIndex + 1) % attractions.length;
     updateAttraction();
-  });
-}
-
-if (attractionMoreBtn) {
-  attractionMoreBtn.addEventListener("click", function () {
-    const item = attractions[attractionIndex];
-    openModal(item.title, item.image, item.details);
-  });
+  }, 4500);
 }
 
 /* Testimonials */
@@ -316,9 +295,7 @@ if (contactForm) {
   });
 }
 
-
-
-//update year 
+/* Update year */
 function setCurrentYear() {
   const yearEl = document.getElementById("currentYear");
   if (yearEl) {
@@ -332,11 +309,10 @@ function initLucideIcons() {
   }
 }
 
-
 /* Start */
-updateAttraction();
 startHeroSlider();
 startAboutSlider();
+startAttractionSlider();
 startTestimonialSlider();
 setCurrentYear();
 initLucideIcons();
