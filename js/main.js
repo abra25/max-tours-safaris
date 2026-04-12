@@ -23,7 +23,7 @@ const heroSlides = [
 
 const aboutImages = [
   "img/g.jpeg",
-  "img/g1.jpeg",
+  "img/c (19).jpeg",
   "img/g2.jpeg",
   "img/g3.jpeg",
   "img/g4.jpeg",
