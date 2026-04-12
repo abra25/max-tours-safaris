@@ -301,7 +301,6 @@ const mainNav = document.getElementById("mainNav");
 const modal = document.getElementById("tourModal");
 const modalClose = document.getElementById("modalClose");
 const modalBackBtn = document.getElementById("modalBackBtn");
-const modalBookBtn = document.getElementById("modalBookBtn");
 
 const modalImage = document.getElementById("modalImage");
 const modalTitle = document.getElementById("modalTitle");
@@ -420,7 +419,7 @@ function renderTours() {
 
             <div class="card-actions">
               <button class="btn btn-outline" data-view-id="${tour.id}">View More</button>
-              <button class="btn btn-primary" data-book-id="${tour.id}">Book Now</button>
+              <a href="../page/booking.html" class="btn btn-primary">Book Now</a>
             </div>
           </div>
         </article>
@@ -487,24 +486,6 @@ function closeTourModal() {
   document.body.classList.remove("modal-open");
 }
 
-function bookDayTourById(tourId) {
-  const tour = dayTours.find((item) => item.id === tourId);
-  if (!tour) return;
-
-  const subj = "Booking: " + tour.title;
-  const msg =
-    "Hello, I am interested in the tour: " +
-    tour.title +
-    "\n" +
-    (tour.description ? "Details: " + tour.description + "\n" : "") +
-    "Please provide more information.";
-
-  localStorage.setItem("contactSubject", subj);
-  localStorage.setItem("contactMessage", msg);
-
-  window.location.href = "./index.html#contact";
-}
-
 function activateTab(tabName) {
   document.querySelectorAll(".tab-btn").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.tab === tabName);
@@ -528,7 +509,6 @@ if (menuToggle) {
 
 document.addEventListener("click", (e) => {
   const viewBtn = e.target.closest("[data-view-id]");
-  const bookBtn = e.target.closest("[data-book-id]");
   const tabBtn = e.target.closest(".tab-btn");
   const navLink = e.target.closest("#mainNav a");
   const filterBtn = e.target.closest(".filter-btn");
@@ -537,11 +517,6 @@ document.addEventListener("click", (e) => {
     const id = Number(viewBtn.dataset.viewId);
     const tour = dayTours.find((item) => item.id === id);
     if (tour) openTourModal(tour);
-  }
-
-  if (bookBtn) {
-    const id = Number(bookBtn.dataset.bookId);
-    bookDayTourById(id);
   }
 
   if (tabBtn) {
@@ -598,17 +573,5 @@ document.addEventListener("keydown", (e) => {
     closeTourModal();
   }
 });
-
-if (modalBookBtn) {
-  modalBookBtn.addEventListener("click", (e) => {
-    if (!activeTour) {
-      e.preventDefault();
-      return;
-    }
-
-    e.preventDefault();
-    bookDayTourById(activeTour.id);
-  });
-}
 
 renderTours();
