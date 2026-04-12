@@ -144,15 +144,19 @@ function renderBookings(rows) {
           <span class="status ${booking.status || "pending"}">${booking.status || "pending"}</span>
         </td>
         <td>
-          <div style="display:grid; gap:10px;">
+          <div class="booking-actions-stack">
             <select class="status-select" data-booking-id="${booking.id}">
-              <option value="pending" ${booking.status === "pending" ? "selected" : ""}>Pending</option>
-              <option value="confirmed" ${booking.status === "confirmed" ? "selected" : ""}>Confirmed</option>
-              <option value="rejected" ${booking.status === "rejected" ? "selected" : ""}>Rejected</option>
-            </select>
-            <button class="table-action-btn" data-save-booking-id="${booking.id}">Save</button>
-          </div>
-        </td>
+            <option value="pending" ${booking.status === "pending" ? "selected" : ""}>Pending</option>
+            <option value="confirmed" ${booking.status === "confirmed" ? "selected" : ""}>Confirmed</option>
+            <option value="rejected" ${booking.status === "rejected" ? "selected" : ""}>Rejected</option>
+        </select>
+
+        <div class="booking-row-actions">
+           <button class="table-action-btn" data-save-booking-id="${booking.id}">Save</button>
+           <button class="table-delete-btn" data-delete-booking-id="${booking.id}">Delete</button>
+        </div>
+    </div>
+</td>
       </tr>
     `;
   }).join("");
@@ -162,6 +166,7 @@ function renderBookings(rows) {
 
 function bindBookingActionButtons() {
   const saveButtons = document.querySelectorAll("[data-save-booking-id]");
+  const deleteButtons = document.querySelectorAll("[data-delete-booking-id]");
 
   saveButtons.forEach((button) => {
     button.addEventListener("click", async () => {
@@ -170,6 +175,17 @@ function bindBookingActionButtons() {
       const newStatus = select ? select.value : "pending";
 
       await updateBookingStatus(bookingId, newStatus, button);
+    });
+  });
+
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      const bookingId = Number(button.dataset.deleteBookingId);
+      const confirmed = window.confirm(`Delete booking #${bookingId}? This action cannot be undone.`);
+
+      if (!confirmed) return;
+
+      await deleteBooking(bookingId, button);
     });
   });
 }
@@ -260,6 +276,33 @@ if (bookingSearch) {
 
 if (refreshBookingsBtn) {
   refreshBookingsBtn.addEventListener("click", loadBookings);
+}
+
+async function deleteBooking(bookingId, button) {
+  if (typeof supabaseClient === "undefined") {
+    setBookingMessage("Supabase client is not available.", "error");
+    return;
+  }
+
+  const oldText = button.textContent;
+  button.disabled = true;
+  button.textContent = "Deleting...";
+
+  const { error } = await supabaseClient
+    .from("bookings")
+    .delete()
+    .eq("id", bookingId);
+
+  if (error) {
+    console.error("Failed to delete booking:", error);
+    setBookingMessage(`Failed to delete booking #${bookingId}: ${error.message}`, "error");
+    button.disabled = false;
+    button.textContent = oldText;
+    return;
+  }
+
+  setBookingMessage(`Booking #${bookingId} deleted successfully.`, "success");
+  await loadBookings();
 }
 
 loadBookings();

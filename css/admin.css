@@ -689,3 +689,29 @@ tbody td {
     width: 100%;
   }
 }
+
+.booking-actions-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.booking-row-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.table-delete-btn {
+  border: none;
+  background: rgba(180, 35, 24, 0.1);
+  color: #b42318;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.table-delete-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
