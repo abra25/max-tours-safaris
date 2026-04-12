@@ -58,8 +58,8 @@ async function loadPackages() {
   const packageFromUrl = urlParams.get("package") || "";
 
   try {
-    if (typeof supabase !== "undefined") {
-      const { data, error } = await supabase
+    if (typeof supabaseClient !== "undefined") {
+      const { data, error } = await supabaseClient
         .from("packages")
         .select("id, title, category, location, is_active")
         .eq("is_active", true)
@@ -202,10 +202,10 @@ bookingForm.addEventListener("submit", async (e) => {
   submitButton.textContent = "Sending...";
 
   try {
-    if (typeof supabase !== "undefined") {
+    if (typeof supabaseClient !== "undefined") {
       console.log("Submitting booking data:", formData);
 
-      const { error } = await supabase
+      const { error } = await supabaseClient
         .from("bookings")
         .insert([formData]);
 
