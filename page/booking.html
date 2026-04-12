@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="../img/favicon.jpeg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Your Tour - Max Tour & Safari</title>
+  <meta
+    name="description"
+    content="Book your Zanzibar or Tanzania tour with Max Tour & Safari. Choose your package, travel date, guests, and send your booking request easily."
+  />
+  <link rel="stylesheet" href="../css/booking.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrapper nav-wrap">
+      <a href="../index.html" class="brand">
+        <img src="../img/next.jpeg" alt="Max Tour & Safari Logo" />
+        <span>Max Tour & Safari</span>
+      </a>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Open Menu" aria-expanded="false">☰</button>
+
+      <nav class="main-nav" id="mainNav">
+        <a href="../index.html">Home</a>
+        <a href="daily-tours.html">Day Tours</a>
+        <a href="holiday-packages.html">Holiday Packages</a>
+        <a href="visit-zanzibar.html">Visit Zanzibar</a>
+        <a href="agents.html">Agents</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="booking.html" class="active">Book Now</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="booking-hero">
+    <div class="booking-hero-overlay"></div>
+    <div class="wrapper booking-hero-content">
+      <span class="booking-eyebrow">Max Tour & Safari</span>
+      <h5>Plan Your Tour With Confidence</h5>
+      <p>
+        Tell us your preferred tour, travel date, and a few details about your trip.
+        We will review your request and contact you to confirm availability and final arrangements.
+      </p>
+
+      <div class="booking-hero-pills">
+        <span>Fast Response</span>
+        <span>Flexible Planning</span>
+        <span>Zanzibar & Tanzania</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="booking-section">
+    <div class="wrapper booking-layout">
+      <div class="booking-form-wrap">
+        <div class="section-intro">
+          <span class="section-tag">Booking Request</span>
+          <h5>Book Your Experience</h5>
+          <p>
+            Complete the form below and our team will contact you with the next steps.
+            Payment is arranged outside the website after confirmation.
+          </p>
+        </div>
+
+        <form id="bookingForm" class="booking-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="fullName">Full Name</label>
+              <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="Enter your email address" required />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone / WhatsApp</label>
+              <input type="text" id="phone" name="phone" placeholder="+255..." required />
+            </div>
+
+            <div class="form-group">
+              <label for="serviceType">Service Type</label>
+              <select id="serviceType" name="serviceType" required>
+                <option value="">Select service type</option>
+                <option value="day_tour">Day Tour</option>
+                <option value="holiday_package">Holiday Package</option>
+                <option value="visit_zanzibar">Visit Zanzibar</option>
+                <option value="visit_tanzania">Visit Tanzania</option>
+                <option value="agent_application">Become an Agent</option>
+                <option value="general_inquiry">General Inquiry</option>
+              </select>
+            </div>
+
+            <div class="form-group form-group-wide">
+              <label for="packageName">Select Tour / Package</label>
+              <select id="packageName" name="packageName" required>
+                <option value="">Select a tour or package</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="travelDate">Preferred Travel Date</label>
+              <input type="date" id="travelDate" name="travelDate" />
+            </div>
+
+            <div class="form-group">
+              <label for="pickupLocation">Hotel / Pickup Location</label>
+              <input type="text" id="pickupLocation" name="pickupLocation" placeholder="Hotel name or pickup area" />
+            </div>
+
+            <div class="form-group">
+              <label for="adults">Adults</label>
+              <input type="number" id="adults" name="adults" min="1" value="1" />
+            </div>
+
+            <div class="form-group">
+              <label for="children">Children</label>
+              <input type="number" id="children" name="children" min="0" value="0" />
+            </div>
+
+            <div class="form-group form-group-wide">
+              <label for="message">Special Request / Message</label>
+              <textarea id="message" name="message" rows="6" placeholder="Tell us any special request, preferred activities, or important trip details..."></textarea>
+            </div>
+          </div>
+
+          <div class="form-note">
+            By sending this request, you allow our team to contact you by email or WhatsApp to confirm your booking details.
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Send Booking Request</button>
+            <a href="../index.html" class="btn-secondary">Back to Home</a>
+          </div>
+
+          <p id="formStatus" class="form-status"></p>
+        </form>
+      </div>
+
+      <aside class="booking-side">
+        <div class="booking-card">
+          <span class="side-tag">Why book with us</span>
+          <h3>Simple, Clear, and Personal</h3>
+          <p>
+            We help travelers enjoy Zanzibar and Tanzania with smooth planning,
+            clear communication, and flexible support before arrival.
+          </p>
+
+          <ul class="feature-list">
+            <li>Personal assistance before your trip</li>
+            <li>Flexible tour planning</li>
+            <li>Local experience and destination guidance</li>
+            <li>Easy communication by WhatsApp</li>
+          </ul>
+        </div>
+
+        <div class="booking-card contact-card">
+          <span class="side-tag">Need help first?</span>
+          <h3>Contact Our Team</h3>
+          <p>If you are not ready to book yet, contact us directly.</p>
+
+          <ul class="contact-list">
+            <li><strong>Company:</strong> Max Tour & Safari</li>
+            <li><strong>Email:</strong> info@maxtourandsafari.co.tz</li>
+            <li><strong>Phone:</strong> +255 689 840 637</li>
+            <li><strong>Location:</strong> Zanzibar, Tanzania</li>
+          </ul>
+
+          <a href="https://wa.me/255689840637" target="_blank" class="whatsapp-btn">Chat on WhatsApp</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="wrapper footer-inner">
+      <p><strong>Max Tour & Safari</strong></p>
+      <p>Email: info@maxtourandsafari.co.tz | Phone: +255 689 840 637</p>
+      <p>&copy; <span id="currentYear"></span> Max Tour & Safari. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="../js/booking.js"></script>
+</body>
+</html>

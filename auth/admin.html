@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - Max Tour & Safari</title>
+  <link rel="icon" type="image/png" href="../img/favicon.jpeg" />
+  <link rel="stylesheet" href="../css/admin.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-top">
+        <a href="../index.html" class="sidebar-brand">
+          <img src="../img/next.jpeg" alt="Logo" />
+          <div>
+            <h2>Max Tours</h2>
+            <p>Admin Panel</p>
+          </div>
+        </a>
+
+        <button class="mobile-close" id="mobileClose" aria-label="Close sidebar">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="admin-user-box">
+        <div class="admin-avatar">
+          <i data-lucide="shield-check"></i>
+        </div>
+        <div>
+          <strong>Administrator</strong>
+          <span id="adminUserText">@maxtours</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-link active" data-target="dashboardSection">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
+        </button>
+
+        <button class="nav-link" data-target="bookingsSection">
+          <i data-lucide="calendar-check-2"></i>
+          <span>Bookings</span>
+        </button>
+
+        <button class="nav-link" data-target="packagesSection">
+          <i data-lucide="briefcase-business"></i>
+          <span>Packages</span>
+        </button>
+
+        <button class="nav-link" data-target="agentsSection">
+          <i data-lucide="users-round"></i>
+          <span>Agent Applications</span>
+        </button>
+
+        <button class="nav-link" data-target="messagesSection">
+          <i data-lucide="mail"></i>
+          <span>Messages</span>
+        </button>
+      </nav>
+
+      <button class="logout-btn" id="logoutBtn">
+        <i data-lucide="log-out"></i>
+        <span>Logout</span>
+      </button>
+    </aside>
+
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Welcome, Admin</h1>
+          <p>Manage your tourism website content from one place.</p>
+        </div>
+
+        <button class="menu-btn" id="menuBtn" aria-label="Open sidebar">
+          <i data-lucide="menu"></i>
+        </button>
+      </header>
+
+      <section class="page-section active" id="dashboardSection">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon soft-gold">
+              <i data-lucide="calendar-check-2"></i>
+            </div>
+            <div>
+              <h3>24</h3>
+              <p>Total Bookings</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon soft-green">
+              <i data-lucide="briefcase-business"></i>
+            </div>
+            <div>
+              <h3>12</h3>
+              <p>Active Packages</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon soft-blue">
+              <i data-lucide="users-round"></i>
+            </div>
+            <div>
+              <h3>6</h3>
+              <p>Agent Requests</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon soft-red">
+              <i data-lucide="mail"></i>
+            </div>
+            <div>
+              <h3>14</h3>
+              <p>New Messages</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-grid">
+          <div class="panel-card">
+            <div class="panel-head">
+              <h2>Recent Bookings</h2>
+              <span class="badge">Latest</span>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Package</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Anna Smith</td>
+                    <td>Safari Blue Tour</td>
+                    <td>2026-04-15</td>
+                    <td><span class="status pending">Pending</span></td>
+                  </tr>
+                  <tr>
+                    <td>Marco Philip</td>
+                    <td>5 Days Beach Holiday</td>
+                    <td>2026-04-18</td>
+                    <td><span class="status confirmed">Confirmed</span></td>
+                  </tr>
+                  <tr>
+                    <td>Hassan Omar</td>
+                    <td>Visit Zanzibar Experience</td>
+                    <td>2026-04-20</td>
+                    <td><span class="status pending">Pending</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel-card quick-actions">
+            <div class="panel-head">
+              <h2>Quick Actions</h2>
+            </div>
+
+            <div class="quick-grid">
+              <button class="quick-btn" data-target="bookingsSection">
+                <i data-lucide="calendar-plus"></i>
+                <span>View Bookings</span>
+              </button>
+
+              <button class="quick-btn" data-target="packagesSection">
+                <i data-lucide="folder-plus"></i>
+                <span>Add Package</span>
+              </button>
+
+              <button class="quick-btn" data-target="agentsSection">
+                <i data-lucide="user-plus"></i>
+                <span>Agent Requests</span>
+              </button>
+
+              <button class="quick-btn" data-target="messagesSection">
+                <i data-lucide="inbox"></i>
+                <span>Open Messages</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page-section" id="bookingsSection">
+        <div class="panel-card">
+          <div class="panel-head">
+            <h2>Bookings</h2>
+            <span class="badge green">Tour Requests</span>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Package</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Anna Smith</td>
+                  <td>anna@email.com</td>
+                  <td>+255700000001</td>
+                  <td>Safari Blue Tour</td>
+                  <td>2026-04-15</td>
+                  <td><span class="status pending">Pending</span></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Marco Philip</td>
+                  <td>marco@email.com</td>
+                  <td>+255700000002</td>
+                  <td>5 Days Beach Holiday</td>
+                  <td>2026-04-18</td>
+                  <td><span class="status confirmed">Confirmed</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="page-section" id="packagesSection">
+        <div class="panel-grid">
+          <div class="panel-card">
+            <div class="panel-head">
+              <h2>Add New Package</h2>
+              <span class="badge">Content</span>
+            </div>
+
+            <form class="admin-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Package Title</label>
+                  <input type="text" placeholder="Enter package title" />
+                </div>
+
+                <div class="form-group">
+                  <label>Category</label>
+                  <select>
+                    <option>Day Tour</option>
+                    <option>Holiday Package</option>
+                    <option>Visit Zanzibar</option>
+                    <option>Visit Tanzania</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Location</label>
+                  <select>
+                    <option>Zanzibar</option>
+                    <option>Tanzania</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label>Price</label>
+                  <input type="text" placeholder="$120" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Short Description</label>
+                <textarea rows="5" placeholder="Write package description"></textarea>
+              </div>
+
+              <button type="button" class="primary-btn">Save Package</button>
+            </form>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-head">
+              <h2>Current Packages</h2>
+              <span class="badge gold">Manage</span>
+            </div>
+
+            <div class="mini-list">
+              <div class="mini-item">
+                <div>
+                  <strong>Safari Blue Tour</strong>
+                  <p>Day Tour • Zanzibar</p>
+                </div>
+                <div class="mini-actions">
+                  <button>Edit</button>
+                  <button class="danger-outline">Delete</button>
+                </div>
+              </div>
+
+              <div class="mini-item">
+                <div>
+                  <strong>5 Days Beach Holiday</strong>
+                  <p>Holiday Package • Zanzibar</p>
+                </div>
+                <div class="mini-actions">
+                  <button>Edit</button>
+                  <button class="danger-outline">Delete</button>
+                </div>
+              </div>
+
+              <div class="mini-item">
+                <div>
+                  <strong>Visit Tanzania Experience</strong>
+                  <p>Visit Tanzania • Tanzania</p>
+                </div>
+                <div class="mini-actions">
+                  <button>Edit</button>
+                  <button class="danger-outline">Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page-section" id="agentsSection">
+        <div class="panel-card">
+          <div class="panel-head">
+            <h2>Agent Applications</h2>
+            <span class="badge blue">Applications</span>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Country</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>John Mello</td>
+                  <td>john@email.com</td>
+                  <td>+255700000011</td>
+                  <td>Italy</td>
+                  <td><span class="status pending">Pending</span></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Asha Kombo</td>
+                  <td>asha@email.com</td>
+                  <td>+255700000012</td>
+                  <td>Tanzania</td>
+                  <td><span class="status confirmed">Reviewed</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="page-section" id="messagesSection">
+        <div class="panel-card">
+          <div class="panel-head">
+            <h2>Messages</h2>
+            <span class="badge red">Inbox</span>
+          </div>
+
+          <div class="message-list">
+            <div class="message-item">
+              <div class="message-top">
+                <strong>Mahir Abraham</strong>
+                <span>2026-04-12 22:28</span>
+              </div>
+              <h4>Booking Inquiry</h4>
+              <p>
+                Hello, I would like to know more about your Zanzibar holiday options for next month.
+              </p>
+            </div>
+
+            <div class="message-item">
+              <div class="message-top">
+                <strong>Fatma Ali</strong>
+                <span>2026-04-13 09:10</span>
+              </div>
+              <h4>Partnership Request</h4>
+              <p>
+                I am interested in becoming an agent and would like more information about your process.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../js/admin.js"></script>
+</body>
+</html>
