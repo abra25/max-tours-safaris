@@ -103,6 +103,7 @@ const mainNav = document.getElementById("mainNav");
 const modal = document.getElementById("siteModal");
 const modalClose = document.getElementById("modalClose");
 const modalContent = document.getElementById("modalContent");
+const modalBookBtn = document.getElementById("modalBookBtn");
 
 const contactForm = document.getElementById("contactForm");
 
@@ -110,6 +111,7 @@ let heroIndex = 0;
 let aboutIndex = 0;
 let attractionIndex = 0;
 let testimonialIndex = 0;
+let attractionInterval = null;
 
 /* Mobile menu */
 if (menuToggle && mainNav) {
@@ -155,6 +157,8 @@ function updateHeroSlide() {
 }
 
 function startHeroSlider() {
+  if (!heroSlider) return;
+
   updateHeroSlide();
 
   setInterval(() => {
@@ -181,11 +185,19 @@ function startAboutSlider() {
   }, 3400);
 }
 
-/* Attractions auto slider with image crossfade + text fade */
-function updateAttraction() {
+/* Preload attraction images */
+function preloadAttractionImages() {
+  attractions.forEach((item) => {
+    const img = new Image();
+    img.src = item.image;
+  });
+}
+
+/* Attractions slider */
+function setAttractionContent(index) {
   if (!attractionImage || !attractionTitle || !attractionDesc) return;
 
-  const item = attractions[attractionIndex];
+  const item = attractions[index];
   attractionImage.src = item.image;
   attractionImage.alt = item.title;
   attractionTitle.textContent = item.title;
@@ -200,23 +212,28 @@ function transitionAttraction() {
 
   setTimeout(() => {
     attractionIndex = (attractionIndex + 1) % attractions.length;
-    updateAttraction();
-  }, 280);
+    setAttractionContent(attractionIndex);
+  }, 320);
 
   setTimeout(() => {
     attractionImage.classList.remove("attraction-fading");
     attractionInfo.classList.remove("is-changing");
-  }, 620);
+  }, 760);
 }
 
 function startAttractionSlider() {
-  if (!attractionImage) return;
+  if (!attractionImage || !attractionTitle || !attractionDesc) return;
 
-  updateAttraction();
+  preloadAttractionImages();
+  setAttractionContent(attractionIndex);
 
-  setInterval(() => {
+  if (attractionInterval) {
+    clearInterval(attractionInterval);
+  }
+
+  attractionInterval = setInterval(() => {
     transitionAttraction();
-  }, 4800);
+  }, 5000);
 }
 
 /* Testimonials with fade */
@@ -313,6 +330,12 @@ if (modalClose && modal) {
     if (e.target === modal) {
       modal.classList.remove("active");
     }
+  });
+}
+
+if (modalBookBtn) {
+  modalBookBtn.addEventListener("click", function () {
+    modal.classList.remove("active");
   });
 }
 
