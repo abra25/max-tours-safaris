@@ -19,7 +19,7 @@
         <span>Max Tour & Safari</span>
       </a>
 
-      <button class="menu-toggle" id="menuToggle" aria-label="Open Menu">☰</button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open Menu" aria-expanded="false">☰</button>
 
       <nav class="main-nav" id="mainNav">
         <a href="../index.html">Home</a>
@@ -43,25 +43,51 @@
         local experiences including cave visits, snorkeling trips, village tours, beach
         escapes, spice experiences, and more.
       </p>
+
+      <div class="hero-pills">
+        <span><i data-lucide="sparkles"></i> Private Tours</span>
+        <span><i data-lucide="clock-3"></i> Flexible Duration</span>
+        <span><i data-lucide="map-pinned"></i> Island Highlights</span>
+      </div>
     </div>
   </section>
 
   <section class="section tours-section">
     <div class="wrapper">
       <div class="section-head">
+        <span class="section-tag">Choose Your Experience</span>
         <h2>Choose Your Tour</h2>
         <p>Browse our handpicked daily experiences and open any card for full details.</p>
+      </div>
+
+      <div class="tour-toolbar">
+        <div class="tour-filters" id="tourFilters">
+          <button class="filter-btn active" data-filter="all">All Tours</button>
+          <button class="filter-btn" data-filter="short">Short Tours</button>
+          <button class="filter-btn" data-filter="half">Half Day</button>
+          <button class="filter-btn" data-filter="full">Full Day</button>
+        </div>
+
+        <div class="tour-search">
+          <i data-lucide="search"></i>
+          <input type="text" id="tourSearch" placeholder="Search tours..." aria-label="Search tours" />
+        </div>
       </div>
 
       <div class="tour-grid" id="tourGrid"></div>
 
       <div class="tour-note">
-        <h3>Why book a day tour with Max Tour & Safari?</h3>
-        <p>
-          We focus on memorable local experiences, smooth planning, and flexible booking.
-          Each day tour includes clear highlights, itinerary steps, and essentials so the
-          guest understands the experience before booking.
-        </p>
+        <div class="tour-note-icon">
+          <i data-lucide="badge-check"></i>
+        </div>
+        <div>
+          <h3>Why book a day tour with Max Tour & Safari?</h3>
+          <p>
+            We focus on memorable local experiences, smooth planning, and flexible booking.
+            Each day tour includes clear highlights, itinerary steps, and essentials so the
+            guest understands the experience before booking.
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -84,8 +110,14 @@
 
       <div class="modal-body">
         <div class="modal-top">
+          <div class="modal-badge-row">
+            <span class="modal-tour-chip"><i data-lucide="map"></i> Day Tour</span>
+            <span class="modal-tour-chip"><i data-lucide="star"></i> Top Pick</span>
+          </div>
+
           <h3 id="modalTitle"></h3>
-          <p class="modal-meta" id="modalMeta"></p>
+
+          <div class="modal-meta" id="modalMeta"></div>
           <p class="modal-overview" id="modalOverview"></p>
         </div>
 
@@ -115,11 +147,23 @@
 
         <div class="modal-actions">
           <button class="btn btn-light" id="modalBackBtn">Back</button>
-          <a href="../index.html#contact" class="btn btn-primary" id="modalBookBtn">Book Now</a>
+          <a href="./index.html#contact" class="btn btn-primary" id="modalBookBtn">Book Now</a>
         </div>
       </div>
     </div>
   </div>
+
+  <script type="module">
+    import { createIcons, icons } from "https://cdn.jsdelivr.net/npm/lucide@latest/+esm";
+
+    window.createLucideIcons = () => createIcons({ icons });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      if (window.createLucideIcons) {
+        window.createLucideIcons();
+      }
+    });
+  </script>
 
   <script src="../js/daily-tours.js"></script>
 </body>

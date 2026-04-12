@@ -4,7 +4,7 @@ const dayTours = [
     title: "Kuza Cave Jambiani",
     img: "../img/Kuza Cave.jpeg",
     duration: "3 hours",
-    rating: "5-Star",
+    rating: 5,
     description: "Uncover the Magic of Kuza Cave Today!..",
     overview: "Discover Kuza Cave: A Hidden Gem in Jambiani, Zanzibar",
     details: `
@@ -43,7 +43,7 @@ const dayTours = [
     title: "Blue Lagoon Snorkeling Trip Zanzibar",
     img: "../img/Blue Lagoon Zanzibar.jpeg",
     duration: "3 hours",
-    rating: "5-Star",
+    rating: 5,
     description: "Blue lagoon snorkeling tour..",
     overview: "Blue lagoon snorkeling tour",
     details: `
@@ -81,7 +81,7 @@ const dayTours = [
     title: "Nungwi Village Tour",
     img: "../img/c (98).jpeg",
     duration: "3 hours",
-    rating: "5-Star",
+    rating: 4,
     description: "nungwi village tour..",
     overview: "Nungwi Village Tour",
     details: `
@@ -115,7 +115,7 @@ const dayTours = [
     title: "Salaam Cave Tour",
     img: "../img/c (259).jpeg",
     duration: "2 hours",
-    rating: "5-Star",
+    rating: 5,
     description: "Swim with Zanzibar’s majestic sea turtles in clear waters.",
     overview: "Discover the Magic of Salaam Cave!",
     details: `
@@ -153,7 +153,7 @@ const dayTours = [
     title: "Mtende Beach Escape",
     img: "../img/c (260).jpeg",
     duration: "Half Day",
-    rating: "5-Star",
+    rating: 4,
     description: "Relax on Zanzibar’s serene and picturesque Mtende Beach.",
     overview: "Discover the Peace of Mtende Beach!",
     details: `
@@ -191,7 +191,7 @@ const dayTours = [
     title: "Kae Funk Sunset Experience",
     img: "../img/c (261).jpeg",
     duration: "2 hours",
-    rating: "5-Star",
+    rating: 3,
     description: "Relax and enjoy Zanzibar’s most peaceful sunset spot.",
     overview: "Witness the Magic of Kae Funk!",
     details: `
@@ -229,7 +229,7 @@ const dayTours = [
     title: "Full Day North Coast Relaxation",
     img: "../img/Full Day North Coast Nungwi Relaxation.jpeg",
     duration: "Full Day",
-    rating: "5-Star",
+    rating: 5,
     description: "full day nungwi relaxation..",
     overview: "Full Day North Coast Relaxation: Experience Zanzibar’s Pristine Beauty",
     details: `
@@ -261,7 +261,7 @@ const dayTours = [
     title: "Spice Tour with Cooking Class",
     img: "../img/c (210).jpeg",
     duration: "3 hours",
-    rating: "5-Star",
+    rating: 4,
     description: "spice tour and cooking class..",
     overview: "Discover the Ultimate Spice Tour with a Cooking Class in Zanzibar",
     details: `
@@ -312,21 +312,112 @@ const modalItinerary = document.getElementById("modalItinerary");
 const modalDuration = document.getElementById("modalDuration");
 const modalInclusions = document.getElementById("modalInclusions");
 
+const filterButtons = document.querySelectorAll(".filter-btn");
+const tourSearch = document.getElementById("tourSearch");
+
 let activeTour = null;
+let currentFilter = "all";
+let currentSearch = "";
+
+function lucideRefresh() {
+  if (window.createLucideIcons) {
+    window.createLucideIcons();
+  }
+}
+
+function starSVG() {
+  return `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M11.999 2.5l2.935 5.947 6.565.955-4.75 4.63 1.121 6.538-5.871-3.087-5.871 3.087 1.121-6.538-4.75-4.63 6.565-.955L11.999 2.5z"></path>
+    </svg>
+  `;
+}
+
+function renderStars(count = 5, total = 5) {
+  const safeCount = Math.max(0, Math.min(Number(count) || 0, total));
+  let stars = '<span class="rating-stars" aria-label="' + safeCount + ' out of ' + total + ' stars">';
+
+  for (let i = 1; i <= total; i++) {
+    stars += `
+      <span class="rating-star ${i <= safeCount ? "filled" : "empty"}">
+        ${starSVG()}
+      </span>
+    `;
+  }
+
+  stars += "</span>";
+  return stars;
+}
+
+function getDurationGroup(duration = "") {
+  const value = duration.toLowerCase();
+
+  if (value.includes("full")) return "full";
+  if (value.includes("half")) return "half";
+  return "short";
+}
+
+function matchesFilter(tour) {
+  return currentFilter === "all" || getDurationGroup(tour.duration) === currentFilter;
+}
+
+function matchesSearch(tour) {
+  if (!currentSearch.trim()) return true;
+
+  const q = currentSearch.toLowerCase();
+  return (
+    tour.title.toLowerCase().includes(q) ||
+    tour.description.toLowerCase().includes(q) ||
+    tour.overview.toLowerCase().includes(q)
+  );
+}
+
+function renderEmptyState() {
+  tourGrid.innerHTML = `
+    <div class="empty-state">
+      <i data-lucide="search-x"></i>
+      <p>No tours found.</p>
+    </div>
+  `;
+  lucideRefresh();
+}
 
 function renderTours() {
-  tourGrid.innerHTML = dayTours
+  const filteredTours = dayTours.filter((tour) => matchesFilter(tour) && matchesSearch(tour));
+
+  if (!filteredTours.length) {
+    renderEmptyState();
+    return;
+  }
+
+  tourGrid.innerHTML = filteredTours
     .map(
       (tour) => `
         <article class="tour-card">
           <div class="tour-card-image">
-            <img src="${tour.img}" alt="${tour.title}">
+            <img src="${tour.img}" alt="${tour.title}" loading="lazy">
             <span class="tour-badge">${tour.duration}</span>
+            <div class="tour-rating" aria-label="${tour.rating} star rating">
+              ${renderStars(tour.rating)}
+            </div>
           </div>
+
           <div class="tour-card-body">
             <h3>${tour.title}</h3>
             <p class="tour-desc">${tour.description}</p>
-            <p class="tour-meta"><strong>Rating:</strong> ${tour.rating}</p>
+
+            <div class="tour-meta">
+              <span class="tour-duration">
+                <i data-lucide="clock-3"></i>
+                ${tour.duration}
+              </span>
+
+              <span class="tour-link">
+                Explore
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+
             <div class="card-actions">
               <button class="btn btn-outline" data-view-id="${tour.id}">View More</button>
               <button class="btn btn-primary" data-book-id="${tour.id}">Book Now</button>
@@ -336,6 +427,8 @@ function renderTours() {
       `
     )
     .join("");
+
+  lucideRefresh();
 }
 
 function openTourModal(tour) {
@@ -344,7 +437,17 @@ function openTourModal(tour) {
   modalImage.src = tour.img;
   modalImage.alt = tour.title;
   modalTitle.textContent = tour.title;
-  modalMeta.textContent = `${tour.duration} | ${tour.rating}`;
+
+  modalMeta.innerHTML = `
+    <span class="modal-meta-item">
+      <i data-lucide="clock-3"></i>
+      ${tour.duration}
+    </span>
+    <span class="modal-meta-item">
+      ${renderStars(tour.rating)}
+    </span>
+  `;
+
   modalOverview.textContent = tour.overview || tour.description || "";
   modalDetails.innerHTML = tour.details || "<p>No extra details available.</p>";
   modalDuration.textContent = tour.duration || "";
@@ -375,12 +478,13 @@ function openTourModal(tour) {
 
   activateTab("details");
   modal.classList.add("active");
-  document.body.style.overflow = "hidden";
+  document.body.classList.add("modal-open");
+  lucideRefresh();
 }
 
 function closeTourModal() {
   modal.classList.remove("active");
-  document.body.style.overflow = "";
+  document.body.classList.remove("modal-open");
 }
 
 function bookDayTourById(tourId) {
@@ -398,7 +502,7 @@ function bookDayTourById(tourId) {
   localStorage.setItem("contactSubject", subj);
   localStorage.setItem("contactMessage", msg);
 
-  window.location.href = "index.html#contact";
+  window.location.href = "./index.html#contact";
 }
 
 function activateTab(tabName) {
@@ -414,14 +518,20 @@ function activateTab(tabName) {
   if (target) target.classList.add("active");
 }
 
-menuToggle.addEventListener("click", () => {
-  mainNav.classList.toggle("active");
-});
+if (menuToggle) {
+  menuToggle.addEventListener("click", () => {
+    const isExpanded = menuToggle.getAttribute("aria-expanded") === "true";
+    menuToggle.setAttribute("aria-expanded", String(!isExpanded));
+    mainNav.classList.toggle("active");
+  });
+}
 
 document.addEventListener("click", (e) => {
   const viewBtn = e.target.closest("[data-view-id]");
   const bookBtn = e.target.closest("[data-book-id]");
   const tabBtn = e.target.closest(".tab-btn");
+  const navLink = e.target.closest("#mainNav a");
+  const filterBtn = e.target.closest(".filter-btn");
 
   if (viewBtn) {
     const id = Number(viewBtn.dataset.viewId);
@@ -437,21 +547,68 @@ document.addEventListener("click", (e) => {
   if (tabBtn) {
     activateTab(tabBtn.dataset.tab);
   }
-});
 
-modalClose.addEventListener("click", closeTourModal);
-modalBackBtn.addEventListener("click", closeTourModal);
-
-modal.addEventListener("click", (e) => {
-  if (e.target === modal) closeTourModal();
-});
-
-modalBookBtn.addEventListener("click", (e) => {
-  if (!activeTour) {
-    e.preventDefault();
-    return;
+  if (filterBtn) {
+    filterButtons.forEach((btn) => btn.classList.remove("active"));
+    filterBtn.classList.add("active");
+    currentFilter = filterBtn.dataset.filter || "all";
+    renderTours();
   }
-  bookDayTourById(activeTour.id);
+
+  if (navLink && window.innerWidth <= 768) {
+    mainNav.classList.remove("active");
+    menuToggle.setAttribute("aria-expanded", "false");
+  }
+
+  if (
+    mainNav &&
+    menuToggle &&
+    !mainNav.contains(e.target) &&
+    !menuToggle.contains(e.target) &&
+    window.innerWidth <= 768
+  ) {
+    mainNav.classList.remove("active");
+    menuToggle.setAttribute("aria-expanded", "false");
+  }
 });
+
+if (tourSearch) {
+  tourSearch.addEventListener("input", (e) => {
+    currentSearch = e.target.value || "";
+    renderTours();
+  });
+}
+
+if (modalClose) {
+  modalClose.addEventListener("click", closeTourModal);
+}
+
+if (modalBackBtn) {
+  modalBackBtn.addEventListener("click", closeTourModal);
+}
+
+if (modal) {
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeTourModal();
+  });
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && modal.classList.contains("active")) {
+    closeTourModal();
+  }
+});
+
+if (modalBookBtn) {
+  modalBookBtn.addEventListener("click", (e) => {
+    if (!activeTour) {
+      e.preventDefault();
+      return;
+    }
+
+    e.preventDefault();
+    bookDayTourById(activeTour.id);
+  });
+}
 
 renderTours();
