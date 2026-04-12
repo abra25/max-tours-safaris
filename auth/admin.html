@@ -197,49 +197,49 @@
       </section>
 
       <section class="page-section" id="bookingsSection">
-        <div class="panel-card">
-          <div class="panel-head">
-            <h2>Bookings</h2>
-            <span class="badge green">Tour Requests</span>
-          </div>
+  <div class="panel-card">
+    <div class="panel-head panel-head-stack">
+      <div>
+        <h2>Bookings</h2>
+        <span class="badge green">Latest Requests</span>
+      </div>
 
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Package</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Anna Smith</td>
-                  <td>anna@email.com</td>
-                  <td>+255700000001</td>
-                  <td>Safari Blue Tour</td>
-                  <td>2026-04-15</td>
-                  <td><span class="status pending">Pending</span></td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Marco Philip</td>
-                  <td>marco@email.com</td>
-                  <td>+255700000002</td>
-                  <td>5 Days Beach Holiday</td>
-                  <td>2026-04-18</td>
-                  <td><span class="status confirmed">Confirmed</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
+      <div class="bookings-tools">
+        <input
+          type="text"
+          id="bookingSearch"
+          class="booking-search"
+          placeholder="Search by name, email, package..."
+        />
+        <button class="primary-btn" id="refreshBookingsBtn" type="button">Refresh</button>
+      </div>
+    </div>
+
+    <p id="bookingStatusMessage" class="admin-info-message"></p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Guest</th>
+            <th>Package</th>
+            <th>Travel Date</th>
+            <th>Guests</th>
+            <th>Submitted</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="bookingsTableBody">
+          <tr>
+            <td colspan="8">Loading bookings...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
 
       <section class="page-section" id="packagesSection">
         <div class="panel-grid">
@@ -412,6 +412,8 @@
     </main>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-client.js"></script>
   <script src="../js/admin.js"></script>
 </body>
 </html>
