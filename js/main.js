@@ -21,16 +21,6 @@ const heroSlides = [
   }
 ];
 
-const aboutImages = [
-  "img/g.jpeg",
-  "img/c (19).jpeg",
-  "img/g2.jpeg",
-  "img/g3.jpeg",
-  "img/g4.jpeg",
-  "img/g6.jpeg",
-  "img/g7.jpeg",
-  "img/g8.jpeg"
-];
 
 const attractions = [
   {
@@ -167,23 +157,6 @@ function startHeroSlider() {
   }, 5200);
 }
 
-/* About image slider with fade */
-function startAboutSlider() {
-  if (!aboutMainImage) return;
-
-  setInterval(() => {
-    aboutMainImage.classList.add("is-switching");
-
-    setTimeout(() => {
-      aboutIndex = (aboutIndex + 1) % aboutImages.length;
-      aboutMainImage.src = aboutImages[aboutIndex];
-    }, 220);
-
-    setTimeout(() => {
-      aboutMainImage.classList.remove("is-switching");
-    }, 520);
-  }, 3400);
-}
 
 /* Preload attraction images */
 function preloadAttractionImages() {
@@ -375,7 +348,6 @@ function initLucideIcons() {
 
 /* Start */
 startHeroSlider();
-startAboutSlider();
 startAttractionSlider();
 startTestimonialSlider();
 setCurrentYear();
