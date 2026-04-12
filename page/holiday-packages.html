@@ -7,11 +7,12 @@
   <title>Holiday Packages - Max Tour & Safari</title>
   <meta
     name="description"
-    content="Discover our affordable holiday packages for Tanzania and Zanzibar with Max Tour & Safari. From multi-day safari and beach combinations to private excursions."
+    content="Explore Zanzibar holiday packages with beach escapes, Stone Town, snorkeling, spice tours, and island adventures."
   />
   <link rel="stylesheet" href="../css/holiday-packages.css" />
 </head>
 <body>
+
   <header class="site-header">
     <div class="wrapper nav-wrap">
       <a href="../index.html" class="brand">
@@ -23,12 +24,11 @@
 
       <nav class="main-nav" id="mainNav">
         <a href="../index.html">Home</a>
-        <a href="daily-tours.html">Daily Tours</a>
+        <a href="daily-tours.html">Day Tours</a>
         <a href="holiday-packages.html" class="active">Holiday Packages</a>
         <a href="visit-zanzibar.html">Visit Zanzibar</a>
         <a href="agents.html">Agents</a>
         <a href="gallery.html">Gallery</a>
-        <a href="../index.html#contact">Contact</a>
       </nav>
     </div>
   </header>
@@ -36,11 +36,11 @@
   <section class="page-hero">
     <div class="page-hero-overlay"></div>
     <div class="wrapper page-hero-content">
-      <span class="eyebrow">Signature Journeys</span>
+      <span class="eyebrow">Signature Escapes</span>
       <h1>Holiday Packages</h1>
       <p>
-        Discover handpicked multi-day travel packages combining Zanzibar beaches,
-        culture, snorkeling, safari, spice experiences, and unforgettable island moments.
+        Curated Zanzibar holidays with beaches, cultural highlights, snorkeling,
+        spice tours, and unforgettable island moments.
       </p>
     </div>
   </section>
@@ -48,41 +48,22 @@
   <section class="section packages-section">
     <div class="wrapper">
       <div class="section-head">
-        <h2>Max Tour & Safari – Holiday Packages</h2>
+        <h2>Choose Your Package</h2>
         <p>
-          Choose a ready-made holiday package or open any package for the full program,
-          day-by-day plan, and quick booking.
+          Short, clear package cards for quick browsing. Open any package to see the
+          itinerary, inclusions, and booking details.
         </p>
       </div>
 
       <div class="package-grid" id="packageGrid"></div>
-
-      <div class="package-note">
-        <h3>Need a custom itinerary?</h3>
-        <p>
-          We can also customize any package based on your travel dates, interests,
-          beach preference, snorkeling plans, or safari combination.
-        </p>
-      </div>
     </div>
   </section>
 
   <footer class="site-footer">
     <div class="wrapper footer-inner">
-      <div class="footer-logo">
-        <img src="../img/favicon.jpeg" alt="Max Tour & Safari Logo" />
-      </div>
-      <p>
-        <a href="tel:+255617438758">+255 617 438 758</a> |
-        <a href="mailto:info@maxtourandsafari.co.tz">info@maxtourandsafari.co.tz</a>
-      </p>
-      <div class="footer-socials">
-        <a href="https://www.facebook.com/profile.php?id=61561055606916" target="_blank" rel="noopener">Facebook</a>
-        <a href="https://www.instagram.com/zakayo3838?igsh=eDNiMmRlbWF5MHlu" target="_blank" rel="noopener">Instagram</a>
-        <a href="https://wa.me/255617438758" target="_blank" rel="noopener">WhatsApp</a>
-      </div>
-      <p><strong>Max Tour & Safari</strong> &copy; 2026. All Rights Reserved.</p>
-      <p>Zanzibar, Tanzania</p>
+      <p><strong>Max Tour & Safari</strong></p>
+      <p>Email: info@maxtourandsafari.co.tz | Phone: +255 689 840 637</p>
+      <p>&copy; <span id="currentYear"></span> Max Tour & Safari. All rights reserved.</p>
     </div>
   </footer>
 
@@ -96,38 +77,40 @@
 
       <div class="modal-body">
         <div class="modal-top">
+          <div class="modal-badges">
+            <span id="modalDuration" class="pill"></span>
+            <span id="modalRating" class="pill pill-soft"></span>
+          </div>
           <h3 id="modalTitle"></h3>
-          <p class="modal-meta" id="modalMeta"></p>
-          <p class="modal-overview" id="modalOverview"></p>
+          <p id="modalOverview" class="modal-overview"></p>
         </div>
 
         <div class="modal-tabs">
-          <button class="tab-btn active" data-tab="program">Program</button>
-          <button class="tab-btn" data-tab="details">Details</button>
+          <button class="tab-btn active" data-tab="highlights">Highlights</button>
+          <button class="tab-btn" data-tab="itinerary">Itinerary</button>
           <button class="tab-btn" data-tab="included">Included</button>
+          <button class="tab-btn" data-tab="terms">Essentials</button>
         </div>
 
-        <div class="tab-panel active" id="tab-program">
-          <div id="modalProgram"></div>
+        <div class="tab-panel active" id="tab-highlights">
+          <div id="modalHighlights"></div>
         </div>
 
-        <div class="tab-panel" id="tab-details">
-          <div id="modalDetails"></div>
+        <div class="tab-panel" id="tab-itinerary">
+          <div id="modalItinerary"></div>
         </div>
 
         <div class="tab-panel" id="tab-included">
-          <div class="included-wrap">
-            <div class="duration-row">
-              <strong>Duration:</strong>
-              <span id="modalDuration"></span>
-            </div>
-            <div id="modalInclusions"></div>
-          </div>
+          <div id="modalInclusions"></div>
+        </div>
+
+        <div class="tab-panel" id="tab-terms">
+          <div id="modalTerms"></div>
         </div>
 
         <div class="modal-actions">
-          <button class="btn btn-light" id="modalBackBtn">Back</button>
-          <a href="../index.html#contact" class="btn btn-primary" id="modalBookBtn">Book This Package</a>
+          <button class="btn btn-light" id="modalBackBtn">Close</button>
+          <a href="../index.html#contact" class="btn btn-primary" id="modalBookBtn">Book Now</a>
         </div>
       </div>
     </div>
