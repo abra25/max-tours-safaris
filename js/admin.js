@@ -274,13 +274,25 @@ function renderDashboardRecentBookings(rows) {
   }
 
   dashboardRecentBookingsBody.innerHTML = rows.map((booking) => `
-    <tr>
+    <tr class="dashboard-booking-row" data-booking-row-id="${booking.id}">
       <td>${booking.full_name || "—"}</td>
       <td>${booking.package_name || "—"}</td>
       <td>${formatDate(booking.travel_date)}</td>
       <td><span class="status ${booking.status || "pending"}">${booking.status || "pending"}</span></td>
     </tr>
   `).join("");
+
+  bindDashboardRecentBookingRows();
+}
+
+function bindDashboardRecentBookingRows() {
+  const rows = document.querySelectorAll(".dashboard-booking-row");
+
+  rows.forEach((row) => {
+    row.addEventListener("click", () => {
+      openSection("bookingsSection");
+    });
+  });
 }
 
 async function loadDashboardRecentBookings() {
