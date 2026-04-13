@@ -127,43 +127,29 @@
 
         <div class="panel-grid">
           <div class="panel-card">
-            <div class="panel-head">
-              <h2>Recent Bookings</h2>
-              <span class="badge">Latest</span>
-            </div>
+  <div class="panel-head">
+    <h2>Recent Bookings</h2>
+    <span class="badge">Latest</span>
+  </div>
 
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Package</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Anna Smith</td>
-                    <td>Safari Blue Tour</td>
-                    <td>2026-04-15</td>
-                    <td><span class="status pending">Pending</span></td>
-                  </tr>
-                  <tr>
-                    <td>Marco Philip</td>
-                    <td>5 Days Beach Holiday</td>
-                    <td>2026-04-18</td>
-                    <td><span class="status confirmed">Confirmed</span></td>
-                  </tr>
-                  <tr>
-                    <td>Hassan Omar</td>
-                    <td>Visit Zanzibar Experience</td>
-                    <td>2026-04-20</td>
-                    <td><span class="status pending">Pending</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Package</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="dashboardRecentBookingsBody">
+        <tr>
+          <td colspan="4">Loading recent bookings...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
           </div>
 
           <div class="panel-card quick-actions">

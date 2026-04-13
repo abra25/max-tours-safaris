@@ -109,7 +109,7 @@ a {
 /* HERO */
 .page-hero {
   min-height: 54vh;
-  background: url("../img/holiday.jpg") center/cover no-repeat;
+  background: url("../img/holiday-hero.jpg") center/cover no-repeat;
   position: relative;
   display: flex;
   align-items: center;

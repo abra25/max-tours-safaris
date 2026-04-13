@@ -19,6 +19,7 @@ const sidebarBackdrop = document.getElementById("sidebarBackdrop");
 /* Dashboard stats */
 const dashboardBookingsCount = document.getElementById("dashboardBookingsCount");
 const dashboardPackagesCount = document.getElementById("dashboardPackagesCount");
+const dashboardRecentBookingsBody = document.getElementById("dashboardRecentBookingsBody");
 
 /* Bookings */
 const bookingsTableBody = document.getElementById("bookingsTableBody");
@@ -97,6 +98,7 @@ function openSection(sectionId) {
 
   if (sectionId === "dashboardSection") {
     loadDashboardStats();
+    loadDashboardRecentBookings();
   }
 }
 
@@ -259,6 +261,58 @@ async function loadDashboardStats() {
   }
 }
 
+function renderDashboardRecentBookings(rows) {
+  if (!dashboardRecentBookingsBody) return;
+
+  if (!rows.length) {
+    dashboardRecentBookingsBody.innerHTML = `
+      <tr>
+        <td colspan="4">No recent bookings found.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  dashboardRecentBookingsBody.innerHTML = rows.map((booking) => `
+    <tr>
+      <td>${booking.full_name || "—"}</td>
+      <td>${booking.package_name || "—"}</td>
+      <td>${formatDate(booking.travel_date)}</td>
+      <td><span class="status ${booking.status || "pending"}">${booking.status || "pending"}</span></td>
+    </tr>
+  `).join("");
+}
+
+async function loadDashboardRecentBookings() {
+  if (typeof supabaseClient === "undefined") return;
+  if (!dashboardRecentBookingsBody) return;
+
+  dashboardRecentBookingsBody.innerHTML = `
+    <tr>
+      <td colspan="4">Loading recent bookings...</td>
+    </tr>
+  `;
+
+  try {
+    const { data, error } = await supabaseClient
+      .from("bookings")
+      .select("id, full_name, package_name, travel_date, status, created_at")
+      .order("created_at", { ascending: false })
+      .limit(5);
+
+    if (error) throw error;
+
+    renderDashboardRecentBookings(Array.isArray(data) ? data : []);
+  } catch (error) {
+    console.error("Failed to load recent dashboard bookings:", error);
+    dashboardRecentBookingsBody.innerHTML = `
+      <tr>
+        <td colspan="4">Failed to load recent bookings.</td>
+      </tr>
+    `;
+  }
+}
+
 /* =========================
    BOOKINGS
 ========================= */
@@ -378,6 +432,7 @@ async function loadBookings() {
   allBookings = Array.isArray(data) ? data : [];
   renderBookings(allBookings);
   updateDashboardCounts();
+  loadDashboardRecentBookings();
   setBookingMessage(`Loaded ${allBookings.length} booking(s).`, "success");
 }
 
@@ -926,6 +981,7 @@ document.addEventListener("keydown", (e) => {
 loadBookings();
 loadPackagesAdmin();
 loadDashboardStats();
+loadDashboardRecentBookings();
 
 if (typeof lucide !== "undefined") {
   lucide.createIcons();

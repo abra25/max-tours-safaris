@@ -114,7 +114,7 @@ a {
   align-items: center;
   background:
     linear-gradient(rgba(25, 15, 8, 0.48), rgba(25, 15, 8, 0.48)),
-    url("../img/c (24).jpeg") center/cover no-repeat;
+    url("../img/booking-hero.jpg") center/cover no-repeat;
   overflow: hidden;
 }
 

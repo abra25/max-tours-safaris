@@ -152,7 +152,7 @@ button {
 .page-hero {
   position: relative;
   min-height: 68vh;
-  background: url("../img/c (167).jpeg") center/cover no-repeat;
+  background: url("../img/daily-t-hero.png") center/cover no-repeat;
   display: flex;
   align-items: center;
   overflow: hidden;
