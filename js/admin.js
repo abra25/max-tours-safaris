@@ -66,6 +66,12 @@ const packageHighlightsEl = document.getElementById("packageHighlights");
 const packageItineraryEl = document.getElementById("packageItinerary");
 const packageInclusionsEl = document.getElementById("packageInclusions");
 const packageEssentialsEl = document.getElementById("packageEssentials");
+const agentsTableBody = document.getElementById("agentsTableBody");
+const agentStatusMessage = document.getElementById("agentStatusMessage");
+const agentSearch = document.getElementById("agentSearch");
+const refreshAgentsBtn = document.getElementById("refreshAgentsBtn");
+
+let allAgents = [];
 
 const adminUser = localStorage.getItem("max_admin_user") || "@maxtours";
 if (adminUserText) adminUserText.textContent = adminUser;
@@ -99,6 +105,9 @@ function openSection(sectionId) {
   if (sectionId === "dashboardSection") {
     loadDashboardStats();
     loadDashboardRecentBookings();
+  }
+  if (sectionId === "agentsSection") {
+    loadAgentApplications();
   }
 }
 
@@ -986,6 +995,204 @@ document.addEventListener("keydown", (e) => {
     closePackageEditorModal();
   }
 });
+
+function setAgentMessage(message = "", type = "") {
+  if (!agentStatusMessage) return;
+  agentStatusMessage.textContent = message;
+  agentStatusMessage.className = "admin-info-message";
+  if (type) agentStatusMessage.classList.add(type);
+}
+
+function renderAgentApplications(rows) {
+  if (!agentsTableBody) return;
+
+  if (!rows.length) {
+    agentsTableBody.innerHTML = `
+      <tr>
+        <td colspan="7">No agent applications found.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  agentsTableBody.innerHTML = rows.map((agent) => `
+    <tr>
+      <td>${agent.id}</td>
+      <td>
+        <div class="booking-guest">
+          <strong>${agent.full_name || "—"}</strong>
+          <span>${agent.email || "—"}</span>
+          <span>${agent.phone || "—"}</span>
+        </div>
+      </td>
+      <td>${agent.country || "—"}</td>
+      <td>${agent.experience || "—"}</td>
+      <td>${formatDateTime(agent.created_at)}</td>
+      <td>
+        <span class="status ${agent.status === "approved" ? "confirmed" : agent.status === "rejected" ? "rejected" : "pending"}">
+          ${agent.status || "pending"}
+        </span>
+      </td>
+      <td>
+        <div class="booking-actions-stack">
+          <select class="status-select" data-agent-id="${agent.id}">
+            <option value="pending" ${agent.status === "pending" ? "selected" : ""}>Pending</option>
+            <option value="reviewed" ${agent.status === "reviewed" ? "selected" : ""}>Reviewed</option>
+            <option value="approved" ${agent.status === "approved" ? "selected" : ""}>Approved</option>
+            <option value="rejected" ${agent.status === "rejected" ? "selected" : ""}>Rejected</option>
+          </select>
+
+          <div class="booking-row-actions">
+            <button class="table-action-btn" data-save-agent-id="${agent.id}">Save</button>
+            <button class="table-delete-btn" data-delete-agent-id="${agent.id}">Delete</button>
+          </div>
+        </div>
+      </td>
+    </tr>
+  `).join("");
+
+  bindAgentActionButtons();
+}
+
+function bindAgentActionButtons() {
+  const saveButtons = document.querySelectorAll("[data-save-agent-id]");
+  const deleteButtons = document.querySelectorAll("[data-delete-agent-id]");
+
+  saveButtons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      const agentId = Number(button.dataset.saveAgentId);
+      const select = document.querySelector(`select[data-agent-id="${agentId}"]`);
+      const newStatus = select ? select.value : "pending";
+      await updateAgentStatus(agentId, newStatus, button);
+    });
+  });
+
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      const agentId = Number(button.dataset.deleteAgentId);
+      const confirmed = window.confirm(`Delete agent application #${agentId}?`);
+      if (!confirmed) return;
+      await deleteAgentApplication(agentId, button);
+    });
+  });
+}
+
+async function loadAgentApplications() {
+  if (typeof supabaseClient === "undefined") {
+    setAgentMessage("Supabase client is not available.", "error");
+    return;
+  }
+
+  setAgentMessage("Loading applications...");
+
+  const { data, error } = await supabaseClient
+    .from("agent_applications")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Failed to load agent applications:", error);
+    setAgentMessage(`Failed to load applications: ${error.message}`, "error");
+
+    if (agentsTableBody) {
+      agentsTableBody.innerHTML = `
+        <tr>
+          <td colspan="7">Could not load applications.</td>
+        </tr>
+      `;
+    }
+    return;
+  }
+
+  allAgents = Array.isArray(data) ? data : [];
+  renderAgentApplications(allAgents);
+  setAgentMessage(`Loaded ${allAgents.length} application(s).`, "success");
+}
+
+async function updateAgentStatus(agentId, newStatus, button) {
+  if (typeof supabaseClient === "undefined") {
+    setAgentMessage("Supabase client is not available.", "error");
+    return;
+  }
+
+  const oldText = button.textContent;
+  button.disabled = true;
+  button.textContent = "Saving...";
+
+  const { error } = await supabaseClient
+    .from("agent_applications")
+    .update({ status: newStatus })
+    .eq("id", agentId);
+
+  if (error) {
+    console.error("Failed to update agent application:", error);
+    setAgentMessage(`Failed to update application #${agentId}: ${error.message}`, "error");
+    button.disabled = false;
+    button.textContent = oldText;
+    return;
+  }
+
+  setAgentMessage(`Application #${agentId} updated to ${newStatus}.`, "success");
+  await loadAgentApplications();
+}
+
+async function deleteAgentApplication(agentId, button) {
+  if (typeof supabaseClient === "undefined") {
+    setAgentMessage("Supabase client is not available.", "error");
+    return;
+  }
+
+  const oldText = button.textContent;
+  button.disabled = true;
+  button.textContent = "Deleting...";
+
+  const { error } = await supabaseClient
+    .from("agent_applications")
+    .delete()
+    .eq("id", agentId);
+
+  if (error) {
+    console.error("Failed to delete agent application:", error);
+    setAgentMessage(`Failed to delete application #${agentId}: ${error.message}`, "error");
+    button.disabled = false;
+    button.textContent = oldText;
+    return;
+  }
+
+  setAgentMessage(`Application #${agentId} deleted successfully.`, "success");
+  await loadAgentApplications();
+}
+
+if (agentSearch) {
+  agentSearch.addEventListener("input", () => {
+    const query = agentSearch.value.trim().toLowerCase();
+
+    if (!query) {
+      renderAgentApplications(allAgents);
+      return;
+    }
+
+    const filtered = allAgents.filter((agent) =>
+      [
+        agent.full_name,
+        agent.email,
+        agent.phone,
+        agent.country,
+        agent.company_name,
+        agent.experience,
+        agent.status
+      ]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(query))
+    );
+
+    renderAgentApplications(filtered);
+  });
+}
+
+if (refreshAgentsBtn) {
+  refreshAgentsBtn.addEventListener("click", loadAgentApplications);
+}
 
 /* =========================
    INITIAL LOAD

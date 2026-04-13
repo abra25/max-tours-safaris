@@ -419,45 +419,49 @@
 </div>
 
       <section class="page-section" id="agentsSection">
-        <div class="panel-card">
-          <div class="panel-head">
-            <h2>Agent Applications</h2>
-            <span class="badge blue">Applications</span>
-          </div>
+        <section class="page-section" id="agentsSection">
+  <div class="panel-card">
+    <div class="panel-head panel-head-stack">
+      <div>
+        <h2>Agent Applications</h2>
+        <span class="badge blue">Applications</span>
+      </div>
 
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Country</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>John Mello</td>
-                  <td>john@email.com</td>
-                  <td>+255700000011</td>
-                  <td>Italy</td>
-                  <td><span class="status pending">Pending</span></td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Asha Kombo</td>
-                  <td>asha@email.com</td>
-                  <td>+255700000012</td>
-                  <td>Tanzania</td>
-                  <td><span class="status confirmed">Reviewed</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <div class="bookings-tools">
+        <input
+          type="text"
+          id="agentSearch"
+          class="booking-search"
+          placeholder="Search by name, email, country..."
+        />
+        <button class="primary-btn" id="refreshAgentsBtn" type="button">Refresh</button>
+      </div>
+    </div>
+
+    <p id="agentStatusMessage" class="admin-info-message"></p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Applicant</th>
+            <th>Country</th>
+            <th>Experience</th>
+            <th>Submitted</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="agentsTableBody">
+          <tr>
+            <td colspan="7">Loading applications...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
       </section>
 
       <section class="page-section" id="messagesSection">

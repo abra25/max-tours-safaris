@@ -28,7 +28,6 @@
       <a href="visit-zanzibar.html">Visit Zanzibar</a>
       <a href="agents.html" class="active">Agents</a>
       <a href="gallery.html">Gallery</a>
-      <a href="../index.html#contact">Contact</a>
     </nav>
   </div>
 </header>
@@ -55,25 +54,25 @@
           <li>✔ 24/7 support</li>
           <li>✔ No setup fees</li>
           <li>✔ Wide range of tours</li>
-          <li>✔ Easy booking system</li>
+          <li>✔ Easy booking process</li>
         </ul>
       </div>
 
       <div class="card">
         <h3>How It Works</h3>
         <ol>
-          <li><strong>Apply</strong> – Fill application</li>
-          <li><strong>Approval</strong> – Within 24 hours</li>
-          <li><strong>Training</strong> – Learn system</li>
-          <li><strong>Start Selling</strong></li>
-          <li><strong>Grow Business</strong></li>
+          <li><strong>Apply</strong> – Fill the application</li>
+          <li><strong>Review</strong> – We check your request</li>
+          <li><strong>Approval</strong> – We contact you</li>
+          <li><strong>Training</strong> – Learn the process</li>
+          <li><strong>Start Selling</strong> – Begin your journey</li>
         </ol>
       </div>
     </div>
 
     <div class="cta">
       <h3>Ready to Join?</h3>
-      <p>Contact us today and start your journey as our partner agent.</p>
+      <p>Open the form below and send your application to become our partner agent.</p>
 
       <div class="contact-box">
         <p><strong>Email:</strong> info@maxtourandsafari.co.tz</p>
@@ -81,7 +80,69 @@
         <p><strong>Location:</strong> Zanzibar</p>
       </div>
 
-      <a href="../index.html#contact" class="btn">Apply Now</a>
+      <button type="button" class="btn" id="toggleAgentFormBtn">Apply Now</button>
+    </div>
+
+    <div class="agent-form-wrap" id="agentFormWrap">
+      <div class="agent-form-card">
+        <div class="agent-form-head">
+          <div>
+            <span class="agent-tag">Partner Application</span>
+            <h3>Agent Application Form</h3>
+            <p>Fill in your details and our team will review your request.</p>
+          </div>
+        </div>
+
+        <form id="agentApplicationForm" class="agent-form">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="agentFullName">Full Name</label>
+              <input type="text" id="agentFullName" placeholder="Enter your full name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="agentEmail">Email Address</label>
+              <input type="email" id="agentEmail" placeholder="Enter your email" required />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="agentPhone">Phone / WhatsApp</label>
+              <input type="text" id="agentPhone" placeholder="+255..." required />
+            </div>
+
+            <div class="form-group">
+              <label for="agentCountry">Country</label>
+              <input type="text" id="agentCountry" placeholder="Your country" />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="agentCompany">Company / Brand Name</label>
+              <input type="text" id="agentCompany" placeholder="Optional company or agency name" />
+            </div>
+
+            <div class="form-group">
+              <label for="agentExperience">Travel Experience</label>
+              <input type="text" id="agentExperience" placeholder="Eg. 2 years in travel business" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="agentMessage">Message</label>
+            <textarea id="agentMessage" rows="5" placeholder="Tell us about your business, audience, or why you want to join us..."></textarea>
+          </div>
+
+          <div class="agent-form-actions">
+            <button type="submit" class="btn">Send Application</button>
+            <button type="button" class="btn btn-light" id="closeAgentFormBtn">Close</button>
+          </div>
+
+          <p id="agentFormMessage" class="agent-form-message"></p>
+        </form>
+      </div>
     </div>
 
   </div>
@@ -94,6 +155,8 @@
   <p>© 2026 All rights reserved</p>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase-client.js"></script>
 <script src="../js/agents.js"></script>
 </body>
 </html>
