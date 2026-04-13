@@ -463,28 +463,28 @@
 
       <section class="page-section" id="messagesSection">
         <div class="panel-card">
-          <div class="panel-head">
-            <h2>Messages</h2>
-            <span class="badge red">Inbox</span>
+          <div class="panel-head panel-head-stack">
+            <div>
+              <h2>Messages</h2>
+              <span class="badge red">Inbox</span>
+            </div>
+
+            <div class="bookings-tools">
+              <input
+                type="text"
+                id="messageSearch"
+                class="booking-search"
+                placeholder="Search by name, email, subject..."
+              />
+              <button class="primary-btn" id="refreshMessagesBtn" type="button">Refresh</button>
+            </div>
           </div>
+
+          <p id="messageStatusMessage" class="admin-info-message"></p>
 
           <div class="message-list" id="messagesList">
             <div class="message-item">
-              <div class="message-top">
-                <strong>Mahir Abraham</strong>
-                <span>2026-04-12 22:28</span>
-              </div>
-              <h4>Booking Inquiry</h4>
-              <p>Hello, I would like to know more about your Zanzibar holiday options for next month.</p>
-            </div>
-
-            <div class="message-item">
-              <div class="message-top">
-                <strong>Fatma Ali</strong>
-                <span>2026-04-13 09:10</span>
-              </div>
-              <h4>Partnership Request</h4>
-              <p>I am interested in becoming an agent and would like more information about your process.</p>
+             <p>Loading messages...</p>
             </div>
           </div>
         </div>

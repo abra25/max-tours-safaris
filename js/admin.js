@@ -70,6 +70,13 @@ const agentsTableBody = document.getElementById("agentsTableBody");
 const agentStatusMessage = document.getElementById("agentStatusMessage");
 const agentSearch = document.getElementById("agentSearch");
 const refreshAgentsBtn = document.getElementById("refreshAgentsBtn");
+const messagesList = document.getElementById("messagesList");
+const messageStatusMessage = document.getElementById("messageStatusMessage");
+const messageSearch = document.getElementById("messageSearch");
+const refreshMessagesBtn = document.getElementById("refreshMessagesBtn");
+const dashboardMessagesCount = document.getElementById("dashboardMessagesCount");
+
+let allMessages = [];
 
 let allAgents = [];
 
@@ -109,6 +116,9 @@ function openSection(sectionId) {
   if (sectionId === "agentsSection") {
     loadAgentApplications();
   }
+  if (sectionId === "messagesSection") {
+    loadMessages();
+}
 }
 
 navLinks.forEach((link) => {
@@ -1194,6 +1204,194 @@ if (refreshAgentsBtn) {
   refreshAgentsBtn.addEventListener("click", loadAgentApplications);
 }
 
+function setMessageStatus(message = "", type = "") {
+  if (!messageStatusMessage) return;
+  messageStatusMessage.textContent = message;
+  messageStatusMessage.className = "admin-info-message";
+  if (type) messageStatusMessage.classList.add(type);
+}
+
+function updateDashboardMessageCount() {
+  if (dashboardMessagesCount) {
+    const unreadCount = allMessages.filter((msg) => msg.status === "new").length;
+    dashboardMessagesCount.textContent = String(unreadCount);
+  }
+}
+
+function renderMessages(rows) {
+  if (!messagesList) return;
+
+  if (!rows.length) {
+    messagesList.innerHTML = `
+      <div class="message-item">
+        <p>No messages found.</p>
+      </div>
+    `;
+    return;
+  }
+
+  messagesList.innerHTML = rows.map((msg) => `
+    <div class="message-item">
+      <div class="message-top">
+        <div>
+          <strong>${msg.full_name || "—"}</strong>
+          <div style="margin-top:4px; color:#6f6a64; font-size:0.9rem;">${msg.email || "—"}</div>
+        </div>
+        <span>${formatDateTime(msg.created_at)}</span>
+      </div>
+
+      <h4>${msg.subject || "No Subject"}</h4>
+      <p>${msg.message || ""}</p>
+
+      <div class="booking-row-actions" style="margin-top:14px;">
+        <button class="table-action-btn" data-read-message-id="${msg.id}">
+          ${msg.status === "read" ? "Viewed" : "Mark as Viewed"}
+        </button>
+        <button class="table-delete-btn" data-delete-message-id="${msg.id}">Delete</button>
+      </div>
+    </div>
+  `).join("");
+
+  bindMessageButtons();
+}
+
+function bindMessageButtons() {
+  const readButtons = document.querySelectorAll("[data-read-message-id]");
+  const deleteButtons = document.querySelectorAll("[data-delete-message-id]");
+
+  readButtons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      const messageId = Number(button.dataset.readMessageId);
+      await markMessageAsRead(messageId, button);
+    });
+  });
+
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      const messageId = Number(button.dataset.deleteMessageId);
+      const confirmed = window.confirm(`Delete message #${messageId}?`);
+      if (!confirmed) return;
+      await deleteMessage(messageId, button);
+    });
+  });
+}
+
+async function loadMessages() {
+  if (typeof supabaseClient === "undefined") {
+    setMessageStatus("Supabase client is not available.", "error");
+    return;
+  }
+
+  setMessageStatus("Loading messages...");
+
+  const { data, error } = await supabaseClient
+    .from("contact_messages")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Failed to load messages:", error);
+    setMessageStatus(`Failed to load messages: ${error.message}`, "error");
+
+    if (messagesList) {
+      messagesList.innerHTML = `
+        <div class="message-item">
+          <p>Could not load messages.</p>
+        </div>
+      `;
+    }
+    return;
+  }
+
+  allMessages = Array.isArray(data) ? data : [];
+  renderMessages(allMessages);
+  updateDashboardMessageCount();
+  setMessageStatus(`Loaded ${allMessages.length} message(s).`, "success");
+}
+
+async function markMessageAsRead(messageId, button) {
+  if (typeof supabaseClient === "undefined") {
+    setMessageStatus("Supabase client is not available.", "error");
+    return;
+  }
+
+  const oldText = button.textContent;
+  button.disabled = true;
+  button.textContent = "Saving...";
+
+  const { error } = await supabaseClient
+    .from("contact_messages")
+    .update({ status: "read" })
+    .eq("id", messageId);
+
+  if (error) {
+    console.error("Failed to update message:", error);
+    setMessageStatus(`Failed to update message #${messageId}: ${error.message}`, "error");
+    button.disabled = false;
+    button.textContent = oldText;
+    return;
+  }
+
+  setMessageStatus(`Message #${messageId} marked as viewed.`, "success");
+  await loadMessages();
+}
+
+async function deleteMessage(messageId, button) {
+  if (typeof supabaseClient === "undefined") {
+    setMessageStatus("Supabase client is not available.", "error");
+    return;
+  }
+
+  const oldText = button.textContent;
+  button.disabled = true;
+  button.textContent = "Deleting...";
+
+  const { error } = await supabaseClient
+    .from("contact_messages")
+    .delete()
+    .eq("id", messageId);
+
+  if (error) {
+    console.error("Failed to delete message:", error);
+    setMessageStatus(`Failed to delete message #${messageId}: ${error.message}`, "error");
+    button.disabled = false;
+    button.textContent = oldText;
+    return;
+  }
+
+  setMessageStatus(`Message #${messageId} deleted successfully.`, "success");
+  await loadMessages();
+}
+
+if (messageSearch) {
+  messageSearch.addEventListener("input", () => {
+    const query = messageSearch.value.trim().toLowerCase();
+
+    if (!query) {
+      renderMessages(allMessages);
+      return;
+    }
+
+    const filtered = allMessages.filter((msg) =>
+      [
+        msg.full_name,
+        msg.email,
+        msg.subject,
+        msg.message,
+        msg.status
+      ]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(query))
+    );
+
+    renderMessages(filtered);
+  });
+}
+
+if (refreshMessagesBtn) {
+  refreshMessagesBtn.addEventListener("click", loadMessages);
+}
+
 /* =========================
    INITIAL LOAD
 ========================= */
@@ -1201,6 +1399,7 @@ loadBookings();
 loadPackagesAdmin();
 loadDashboardStats();
 loadDashboardRecentBookings();
+loadMessages();
 
 if (typeof lucide !== "undefined") {
   lucide.createIcons();
