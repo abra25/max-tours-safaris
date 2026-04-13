@@ -21,7 +21,6 @@ const heroSlides = [
   }
 ];
 
-
 const attractions = [
   {
     title: "Serengeti National Park",
@@ -74,7 +73,6 @@ const testimonials = [
 
 const heroSlider = document.getElementById("heroSlider");
 const heroTitle = document.getElementById("heroTitle");
-const aboutMainImage = document.getElementById("aboutMainImage");
 
 const attractionImage = document.getElementById("attractionImage");
 const attractionTitle = document.getElementById("attractionTitle");
@@ -93,12 +91,10 @@ const mainNav = document.getElementById("mainNav");
 const modal = document.getElementById("siteModal");
 const modalClose = document.getElementById("modalClose");
 const modalContent = document.getElementById("modalContent");
-const modalBookBtn = document.getElementById("modalBookBtn");
 
 const contactForm = document.getElementById("contactForm");
 
 let heroIndex = 0;
-let aboutIndex = 0;
 let attractionIndex = 0;
 let testimonialIndex = 0;
 let attractionInterval = null;
@@ -157,8 +153,7 @@ function startHeroSlider() {
   }, 5200);
 }
 
-
-/* Preload attraction images */
+/* Attractions */
 function preloadAttractionImages() {
   attractions.forEach((item) => {
     const img = new Image();
@@ -166,7 +161,6 @@ function preloadAttractionImages() {
   });
 }
 
-/* Attractions slider */
 function setAttractionContent(index) {
   if (!attractionImage || !attractionTitle || !attractionDesc) return;
 
@@ -209,7 +203,7 @@ function startAttractionSlider() {
   }, 5000);
 }
 
-/* Testimonials with fade */
+/* Testimonials */
 function updateTestimonial() {
   if (!testimonialImage || !testimonialText || !testimonialAuthor || !testimonialMeta) return;
 
@@ -306,29 +300,93 @@ if (modalClose && modal) {
   });
 }
 
-if (modalBookBtn) {
-  modalBookBtn.addEventListener("click", function () {
-    modal.classList.remove("active");
-  });
+/* Contact form -> Supabase */
+function ensureContactFeedbackEl() {
+  let feedback = document.getElementById("contactFormMessage");
+
+  if (!feedback && contactForm) {
+    feedback = document.createElement("p");
+    feedback.id = "contactFormMessage";
+    feedback.style.marginTop = "12px";
+    feedback.style.fontWeight = "700";
+    contactForm.appendChild(feedback);
+  }
+
+  return feedback;
 }
 
-/* Contact form demo */
 if (contactForm) {
-  contactForm.addEventListener("submit", function (e) {
+  contactForm.addEventListener("submit", async function (e) {
     e.preventDefault();
 
     const name = document.getElementById("contact-name")?.value.trim();
     const email = document.getElementById("contact-email")?.value.trim();
     const subject = document.getElementById("contact-subject")?.value.trim();
     const message = document.getElementById("contact-message")?.value.trim();
+    const feedback = ensureContactFeedbackEl();
+    const submitBtn = contactForm.querySelector('button[type="submit"]');
+    const oldBtnText = submitBtn ? submitBtn.textContent : "Send Message";
 
     if (!name || !email || !subject || !message) {
-      alert("Please fill in all fields.");
+      if (feedback) {
+        feedback.textContent = "Please fill in all fields.";
+        feedback.style.color = "#b42318";
+      }
       return;
     }
 
-    alert("Form submitted successfully. Later we can connect this to your real backend or another method.");
-    contactForm.reset();
+    if (typeof supabaseClient === "undefined") {
+      if (feedback) {
+        feedback.textContent = "Connection is not available right now.";
+        feedback.style.color = "#b42318";
+      }
+      return;
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending...";
+    }
+
+    if (feedback) {
+      feedback.textContent = "";
+    }
+
+    try {
+      const payload = {
+        full_name: name,
+        email: email,
+        subject: subject,
+        message: message
+      };
+
+      const { error } = await supabaseClient
+        .from("contact_messages")
+        .insert([payload]);
+
+      if (error) {
+        throw error;
+      }
+
+      if (feedback) {
+        feedback.textContent = "Your message has been sent successfully. Our team will get back to you soon.";
+        feedback.style.color = "#1f7a43";
+      }
+
+      contactForm.reset();
+    } catch (error) {
+      console.error("Contact form submit failed:", error);
+
+      if (feedback) {
+        feedback.textContent = `Message failed: ${error.message}`;
+        feedback.style.color = "#b42318";
+      }
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = oldBtnText;
+      }
+    }
   });
 }
 
