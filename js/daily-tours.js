@@ -5,6 +5,7 @@ const mainNav = document.getElementById("mainNav");
 const modal = document.getElementById("tourModal");
 const modalClose = document.getElementById("modalClose");
 const modalBackBtn = document.getElementById("modalBackBtn");
+const modalBookBtn = document.getElementById("modalBookBtn");
 
 const modalImage = document.getElementById("modalImage");
 const modalTitle = document.getElementById("modalTitle");
@@ -90,13 +91,6 @@ function renderEmptyState(message = "No tours found.") {
   lucideRefresh();
 }
 
-function splitLines(text = "") {
-  return String(text)
-    .split(/\n|•/g)
-    .map((item) => item.trim())
-    .filter(Boolean);
-}
-
 function parseItineraryRows(items = []) {
   if (Array.isArray(items) && items.length) {
     return items.map((item, index) => ({
@@ -130,6 +124,10 @@ function normalizeTour(row) {
     itinerary: parseItineraryRows(row.itinerary),
     inclusions: Array.isArray(row.inclusions) ? row.inclusions : []
   };
+}
+
+function getBookingUrl(tourTitle) {
+  return `../p/booking.html?type=day_tour&package=${encodeURIComponent(tourTitle)}`;
 }
 
 function renderTours() {
@@ -170,7 +168,7 @@ function renderTours() {
 
             <div class="card-actions">
               <button class="btn btn-outline" data-view-id="${tour.id}">View More</button>
-              <a href="booking.html?type=day_tour&package=${encodeURIComponent(tour.title)}" class="btn btn-primary">Book Now</a>
+              <a href="${getBookingUrl(tour.title)}" class="btn btn-primary">Book Now</a>
             </div>
           </div>
         </article>
@@ -225,6 +223,10 @@ function openTourModal(tour) {
         </ul>
       `
       : "<p>No inclusions listed.</p>";
+
+  if (modalBookBtn) {
+    modalBookBtn.setAttribute("href", getBookingUrl(tour.title));
+  }
 
   activateTab("details");
   modal.classList.add("active");

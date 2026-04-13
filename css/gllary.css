@@ -493,10 +493,29 @@ button {
   padding: 28px 20px;
 }
 
-.footer p + p {
-  margin-top: 6px;
+.footer-simple {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
+.footer-links {
+  display: flex;
+  gap: 18px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  font-weight: 600;
+  color: #5b4738;
+  transition: 0.2s;
+}
+
+.footer-links a:hover {
+  color: var(--primary);
+}
 /* REVEAL */
 .gallery-category,
 .gallery-item {
