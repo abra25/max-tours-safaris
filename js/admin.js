@@ -18,10 +18,20 @@ const bookingStatusMessage = document.getElementById("bookingStatusMessage");
 const bookingSearch = document.getElementById("bookingSearch");
 const refreshBookingsBtn = document.getElementById("refreshBookingsBtn");
 
+const packageForm = document.getElementById("packageForm");
+const packageFormTitle = document.getElementById("packageFormTitle");
+const packageStatusMessage = document.getElementById("packageStatusMessage");
+const packagesTableBody = document.getElementById("packagesTableBody");
+const packageSearch = document.getElementById("packageSearch");
+const refreshPackagesBtn = document.getElementById("refreshPackagesBtn");
+const packageResetBtn = document.getElementById("packageResetBtn");
+const packageSubmitBtn = document.getElementById("packageSubmitBtn");
+
 const adminUser = localStorage.getItem("max_admin_user") || "@maxtours";
 adminUserText.textContent = adminUser;
 
 let allBookings = [];
+let allPackages = [];
 
 function openSection(sectionId) {
   pageSections.forEach((section) => {
@@ -36,8 +46,12 @@ function openSection(sectionId) {
   sidebarBackdrop.classList.remove("active");
 
   if (sectionId === "bookingsSection") {
-    loadBookings();
-  }
+  loadBookings();
+}
+
+if (sectionId === "packagesSection") {
+  loadPackagesAdmin();
+}
 }
 
 navLinks.forEach((link) => {
@@ -305,5 +319,168 @@ async function deleteBooking(bookingId, button) {
   await loadBookings();
 }
 
+async function savePackage(formValues) {
+  if (typeof supabaseClient === "undefined") {
+    setPackageMessage("Supabase client is not available.", "error");
+    return;
+  }
+
+  const packageId = document.getElementById("packageId").value.trim();
+
+  const payload = {
+    title: formValues.title,
+    slug: formValues.slug || slugify(formValues.title),
+    category: formValues.category,
+    location: formValues.location,
+    price: formValues.price || null,
+    duration: formValues.duration || null,
+    image_url: formValues.image_url || null,
+    short_description: formValues.short_description || null,
+    full_description: formValues.full_description || null,
+    is_featured: formValues.is_featured,
+    is_active: formValues.is_active
+  };
+
+  packageSubmitBtn.disabled = true;
+  packageSubmitBtn.textContent = packageId ? "Updating..." : "Saving...";
+
+  try {
+    let error = null;
+
+    if (packageId) {
+      const result = await supabaseClient
+        .from("packages")
+        .update(payload)
+        .eq("id", Number(packageId));
+
+      error = result.error;
+    } else {
+      const result = await supabaseClient
+        .from("packages")
+        .insert([payload]);
+
+      error = result.error;
+    }
+
+    if (error) throw error;
+
+    setPackageMessage(
+      packageId ? `Package #${packageId} updated successfully.` : "Package added successfully.",
+      "success"
+    );
+
+    resetPackageForm();
+    await loadPackagesAdmin();
+  } catch (error) {
+    console.error("Failed to save package:", error);
+    setPackageMessage(`Failed to save package: ${error.message}`, "error");
+  } finally {
+    packageSubmitBtn.disabled = false;
+    packageSubmitBtn.textContent = "Save Package";
+  }
+}
+
+async function deletePackage(packageId, button) {
+  if (typeof supabaseClient === "undefined") {
+    setPackageMessage("Supabase client is not available.", "error");
+    return;
+  }
+
+  const oldText = button.textContent;
+  button.disabled = true;
+  button.textContent = "Deleting...";
+
+  const { error } = await supabaseClient
+    .from("packages")
+    .delete()
+    .eq("id", packageId);
+
+  if (error) {
+    console.error("Failed to delete package:", error);
+    setPackageMessage(`Failed to delete package #${packageId}: ${error.message}`, "error");
+    button.disabled = false;
+    button.textContent = oldText;
+    return;
+  }
+
+  setPackageMessage(`Package #${packageId} deleted successfully.`, "success");
+  await loadPackagesAdmin();
+}
+
+if (packageForm) {
+  const packageTitleInput = document.getElementById("packageTitle");
+  const packageSlugInput = document.getElementById("packageSlug");
+
+  packageTitleInput.addEventListener("input", () => {
+    if (!document.getElementById("packageId").value.trim()) {
+      packageSlugInput.value = slugify(packageTitleInput.value);
+    }
+  });
+
+  packageForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const values = {
+      title: document.getElementById("packageTitle").value.trim(),
+      slug: document.getElementById("packageSlug").value.trim(),
+      category: document.getElementById("packageCategory").value,
+      location: document.getElementById("packageLocation").value,
+      price: document.getElementById("packagePrice").value.trim(),
+      duration: document.getElementById("packageDuration").value.trim(),
+      image_url: document.getElementById("packageImageUrl").value.trim(),
+      short_description: document.getElementById("packageShortDescription").value.trim(),
+      full_description: document.getElementById("packageFullDescription").value.trim(),
+      is_featured: document.getElementById("packageFeatured").value === "true",
+      is_active: document.getElementById("packageActive").value === "true"
+    };
+
+    if (!values.title || !values.category || !values.location) {
+      setPackageMessage("Please complete title, category, and location.", "error");
+      return;
+    }
+
+    await savePackage(values);
+  });
+}
+
+if (packageResetBtn) {
+  packageResetBtn.addEventListener("click", () => {
+    resetPackageForm();
+    setPackageMessage("Form reset.");
+  });
+}
+
+if (refreshPackagesBtn) {
+  refreshPackagesBtn.addEventListener("click", loadPackagesAdmin);
+}
+
+if (packageSearch) {
+  packageSearch.addEventListener("input", () => {
+    const query = packageSearch.value.trim().toLowerCase();
+
+    if (!query) {
+      renderPackages(allPackages);
+      return;
+    }
+
+    const filtered = allPackages.filter((pkg) =>
+      [
+        pkg.title,
+        pkg.slug,
+        pkg.category,
+        pkg.location,
+        pkg.price,
+        pkg.duration,
+        pkg.short_description
+      ]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(query))
+    );
+
+    renderPackages(filtered);
+  });
+}
+
 loadBookings();
+loadPackagesAdmin();
 lucide.createIcons();

@@ -715,3 +715,54 @@ tbody td {
   opacity: 0.65;
   cursor: not-allowed;
 }
+
+.package-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.secondary-btn {
+  width: fit-content;
+  border: none;
+  background: #efe1d3;
+  color: #5a3415;
+  border-radius: 14px;
+  padding: 13px 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.secondary-btn:hover {
+  background: #e5d2be;
+}
+
+.table-edit-btn {
+  border: none;
+  background: rgba(30, 95, 216, 0.12);
+  color: #1e5fd8;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.package-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.package-title-cell {
+  display: grid;
+  gap: 3px;
+}
+
+.package-title-cell strong {
+  color: #2f241b;
+}
+
+.package-title-cell span {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
