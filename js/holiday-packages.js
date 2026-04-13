@@ -31,41 +31,45 @@ function escapeHtml(value = "") {
     .replace(/'/g, "&#039;");
 }
 
-function splitTextToList(text = "") {
+function splitLines(text = "") {
   if (!text || typeof text !== "string") return [];
-
   return text
-    .split(/\n|•|- /g)
-    .map(item => item.trim())
-    .filter(item => item.length > 0);
+    .split(/\n|•|-/g)
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0);
 }
 
-function buildHighlights(pkg) {
-  const shortItems = splitTextToList(pkg.short_description);
-  const fullItems = splitTextToList(pkg.full_description);
-
-  const merged = [...shortItems, ...fullItems];
-  const unique = [...new Set(merged)];
-
-  if (unique.length) {
-    return unique.slice(0, 6);
-  }
+function makeFeatureChips(pkg) {
+  const items = splitLines(pkg.short_description || pkg.full_description);
+  if (items.length) return items.slice(0, 4);
 
   return [
-    "Well-planned Zanzibar holiday experience",
-    "Flexible travel support from our team",
-    "Comfortable package arrangement",
-    "Suitable for leisure and island discovery"
+    pkg.location ? pkg.location.charAt(0).toUpperCase() + pkg.location.slice(1) : "Zanzibar",
+    pkg.duration || "Flexible",
+    pkg.price || "Custom Quote",
+    pkg.is_featured ? "Top Pick" : "Available"
   ];
 }
 
-function buildItinerary(pkg) {
-  const items = splitTextToList(pkg.full_description);
+function makeHighlights(pkg) {
+  const items = splitLines(pkg.full_description || pkg.short_description);
+  if (items.length) return items.slice(0, 6);
+
+  return [
+    "Holiday planning support",
+    "Flexible package arrangement",
+    "Comfortable travel experience",
+    "Booking confirmation after review"
+  ];
+}
+
+function makeItinerary(pkg) {
+  const items = splitLines(pkg.full_description);
 
   if (items.length >= 2) {
     return items.slice(0, 6).map((item, index) => ({
       day: index + 1,
-      title: `Package Day ${index + 1}`,
+      title: `Package Step ${index + 1}`,
       desc: item
     }));
   }
@@ -73,56 +77,42 @@ function buildItinerary(pkg) {
   return [
     {
       day: 1,
-      title: "Arrival & Welcome",
-      desc: "Arrival, transfer assistance, and introduction to your holiday plan."
+      title: "Arrival & Planning",
+      desc: "Arrival support and start of your holiday arrangement."
     },
     {
       day: 2,
       title: "Holiday Experience",
-      desc: pkg.short_description || "Enjoy a memorable Zanzibar holiday experience."
+      desc: pkg.short_description || "Enjoy the main experiences included in this package."
     },
     {
       day: 3,
-      title: "Flexible Activities",
-      desc: "Relax or continue with planned experiences based on your package."
+      title: "Flexible Continuation",
+      desc: "Continue the package based on the selected travel plan."
     }
   ];
 }
 
-function buildInclusions(pkg) {
-  const items = splitTextToList(pkg.short_description);
+function makeInclusions(pkg) {
+  const list = [];
 
-  if (items.length) {
-    return [
-      "Package planning support",
-      "Travel coordination",
-      ...items.slice(0, 3)
-    ];
-  }
+  if (pkg.duration) list.push(`Duration: ${pkg.duration}`);
+  if (pkg.location) list.push(`Location: ${pkg.location}`);
+  if (pkg.price) list.push(`Price: ${pkg.price}`);
 
-  return [
-    "Package planning support",
-    "Travel coordination",
-    "Selected holiday arrangement details"
-  ];
+  list.push("Planning support");
+  list.push("Direct communication with our team");
+
+  return list;
 }
 
-function buildEssentials(pkg) {
-  const essentials = [];
-
-  if (pkg.price) {
-    essentials.push(`Price: ${pkg.price}`);
-  }
-
-  if (pkg.duration) {
-    essentials.push(`Duration: ${pkg.duration}`);
-  }
-
-  essentials.push("Booking confirmation is arranged after request review.");
-  essentials.push("Payment is handled outside the website.");
-  essentials.push("Travel details can be confirmed directly with our team.");
-
-  return essentials;
+function makeTerms(pkg) {
+  return [
+    "Booking request is reviewed before confirmation",
+    "Payment is handled outside the website",
+    "Final travel details are confirmed directly with our team",
+    pkg.is_featured ? "Featured package option" : "Standard package option"
+  ];
 }
 
 function normalizePackage(row) {
@@ -133,13 +123,18 @@ function normalizePackage(row) {
     price: row.price || "Custom Quote",
     rating: row.is_featured ? "Top Pick" : "Available",
     image: row.image_url || "../img/c (193).jpeg",
-    summary: row.short_description || "Discover a Zanzibar holiday package tailored for comfort, leisure, and memorable island experiences.",
-    overview: row.full_description || row.short_description || "Explore this holiday package and contact our team for planning, availability, and final arrangement details.",
-    features: buildHighlights(row).slice(0, 4),
-    highlights: buildHighlights(row),
-    itinerary: buildItinerary(row),
-    inclusions: buildInclusions(row),
-    essentials: buildEssentials(row),
+    summary:
+      row.short_description ||
+      "Explore this holiday package with flexible planning and memorable travel experiences.",
+    overview:
+      row.full_description ||
+      row.short_description ||
+      "Discover this package and contact our team for more details.",
+    features: makeFeatureChips(row),
+    highlights: makeHighlights(row),
+    itinerary: makeItinerary(row),
+    inclusions: makeInclusions(row),
+    essentials: makeTerms(row),
     raw: row
   };
 }
@@ -151,18 +146,18 @@ function renderPackages() {
     packageGrid.innerHTML = `
       <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 28px 18px;">
         <h3 style="margin-bottom: 10px;">No holiday packages available right now</h3>
-        <p>Please check again soon or contact our team for custom holiday planning.</p>
+        <p>Please check again soon or contact our team for custom planning.</p>
       </div>
     `;
     return;
   }
 
-  packageGrid.innerHTML = packages.map(pkg => `
+  packageGrid.innerHTML = packages.map((pkg) => `
     <article class="package-card">
       <div class="package-image">
         <img src="${escapeHtml(pkg.image)}" alt="${escapeHtml(pkg.title)}">
         <span class="package-badge">${escapeHtml(pkg.duration)}</span>
-        <span class="package-price">${escapeHtml(pkg.price)}</span>
+        <span class="package-price">From ${escapeHtml(pkg.price)}</span>
       </div>
 
       <div class="package-body">
@@ -170,7 +165,7 @@ function renderPackages() {
         <p class="package-summary">${escapeHtml(pkg.summary)}</p>
 
         <div class="package-features">
-          ${pkg.features.map(item => `<span class="feature-chip">${escapeHtml(item)}</span>`).join("")}
+          ${pkg.features.map((item) => `<span class="feature-chip">${escapeHtml(item)}</span>`).join("")}
         </div>
 
         <div class="card-actions">
@@ -194,11 +189,11 @@ function openPackageModal(pkg) {
 
   modalHighlights.innerHTML = `
     <div class="highlight-list">
-      ${pkg.highlights.map(item => `<div class="highlight-item">${escapeHtml(item)}</div>`).join("")}
+      ${pkg.highlights.map((item) => `<div class="highlight-item">${escapeHtml(item)}</div>`).join("")}
     </div>
   `;
 
-  modalItinerary.innerHTML = pkg.itinerary.map(day => `
+  modalItinerary.innerHTML = pkg.itinerary.map((day) => `
     <div class="itinerary-day">
       <strong>Step ${day.day}: ${escapeHtml(day.title)}</strong>
       <p>${escapeHtml(day.desc)}</p>
@@ -207,13 +202,13 @@ function openPackageModal(pkg) {
 
   modalInclusions.innerHTML = `
     <div class="inclusion-list">
-      ${pkg.inclusions.map(item => `<div class="inclusion-item">${escapeHtml(item)}</div>`).join("")}
+      ${pkg.inclusions.map((item) => `<div class="inclusion-item">${escapeHtml(item)}</div>`).join("")}
     </div>
   `;
 
   modalTerms.innerHTML = `
     <div class="terms-list">
-      ${pkg.essentials.map(item => `<div class="terms-item">${escapeHtml(item)}</div>`).join("")}
+      ${pkg.essentials.map((item) => `<div class="terms-item">${escapeHtml(item)}</div>`).join("")}
     </div>
   `;
 
@@ -229,19 +224,19 @@ function closePackageModal() {
 }
 
 function bookPackageById(packageId) {
-  const pkg = packages.find(item => item.id === packageId);
+  const pkg = packages.find((item) => item.id === packageId);
   if (!pkg) return;
 
   const packageParam = encodeURIComponent(pkg.title);
-  window.location.href = `../page/booking.html?type=holiday_package&package=${packageParam}`;
+  window.location.href = `booking.html?type=holiday_package&package=${packageParam}`;
 }
 
 function activateTab(tabName) {
-  document.querySelectorAll(".tab-btn").forEach(btn => {
+  document.querySelectorAll(".tab-btn").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.tab === tabName);
   });
 
-  document.querySelectorAll(".tab-panel").forEach(panel => {
+  document.querySelectorAll(".tab-panel").forEach((panel) => {
     panel.classList.remove("active");
   });
 
@@ -252,14 +247,6 @@ function activateTab(tabName) {
 async function loadHolidayPackages() {
   if (typeof supabaseClient === "undefined") {
     console.error("Supabase client is not available.");
-    if (packageGrid) {
-      packageGrid.innerHTML = `
-        <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 28px 18px;">
-          <h3 style="margin-bottom: 10px;">Packages unavailable</h3>
-          <p>Could not connect to package data right now.</p>
-        </div>
-      `;
-    }
     return;
   }
 
@@ -271,9 +258,9 @@ async function loadHolidayPackages() {
       .eq("is_active", true)
       .order("created_at", { ascending: false });
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
+
+    console.log("Holiday packages from DB:", data);
 
     packages = Array.isArray(data) ? data.map(normalizePackage) : [];
     renderPackages();
@@ -304,7 +291,7 @@ document.addEventListener("click", (e) => {
 
   if (viewBtn) {
     const id = Number(viewBtn.dataset.viewId);
-    const pkg = packages.find(item => item.id === id);
+    const pkg = packages.find((item) => item.id === id);
     if (pkg) openPackageModal(pkg);
   }
 
