@@ -773,3 +773,94 @@ tbody td {
   color: var(--muted);
   font-size: 0.85rem;
 }
+
+.admin-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 2000;
+}
+
+.admin-modal.active {
+  display: block;
+}
+
+.admin-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.48);
+  backdrop-filter: blur(4px);
+}
+
+.admin-modal-dialog {
+  position: relative;
+  z-index: 2;
+  width: min(1120px, calc(100% - 24px));
+  max-height: calc(100vh - 30px);
+  overflow-y: auto;
+  margin: 15px auto;
+  background: #fff;
+  border-radius: 26px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+  padding: 24px;
+}
+
+.admin-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.admin-modal-header h2 {
+  margin-top: 8px;
+  color: #2a2018;
+}
+
+.admin-modal-close {
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: #f4ebdf;
+  color: #8d5524;
+  border-radius: 14px;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+.admin-form-modal {
+  display: grid;
+  gap: 16px;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.hidden-category-field {
+  display: none !important;
+}
+
+@media (max-width: 880px) {
+  .form-grid-2,
+  .form-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-modal-dialog {
+    width: min(100%, calc(100% - 12px));
+    margin: 6px auto;
+    max-height: calc(100vh - 12px);
+    border-radius: 18px;
+    padding: 16px;
+  }
+}

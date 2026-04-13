@@ -242,149 +242,195 @@
 </section>
 
       <section class="page-section" id="packagesSection">
-  <div class="panel-grid">
-    <div class="panel-card">
-      <div class="panel-head">
-        <h2 id="packageFormTitle">Add New Package</h2>
-        <span class="badge gold">Packages</span>
+  <div class="panel-card">
+    <div class="panel-head panel-head-stack">
+      <div>
+        <h2>Packages</h2>
+        <span class="badge gold">Manage Day Tours & Holiday Packages</span>
       </div>
 
-      <p id="packageStatusMessage" class="admin-info-message"></p>
-
-      <form class="admin-form" id="packageForm">
-        <input type="hidden" id="packageId" />
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="packageTitle">Package Title</label>
-            <input type="text" id="packageTitle" placeholder="Enter package title" required />
-          </div>
-
-          <div class="form-group">
-            <label for="packageSlug">Slug</label>
-            <input type="text" id="packageSlug" placeholder="example-package-name" />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="packageCategory">Category</label>
-            <select id="packageCategory" required>
-              <option value="">Select category</option>
-              <option value="day_tour">Day Tour</option>
-              <option value="holiday_package">Holiday Package</option>
-              <option value="visit_zanzibar">Visit Zanzibar</option>
-              <option value="visit_tanzania">Visit Tanzania</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="packageLocation">Location</label>
-            <select id="packageLocation" required>
-              <option value="">Select location</option>
-              <option value="zanzibar">Zanzibar</option>
-              <option value="tanzania">Tanzania</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="packagePrice">Price</label>
-            <input type="text" id="packagePrice" placeholder="$120 or Custom Quote" />
-          </div>
-
-          <div class="form-group">
-            <label for="packageDuration">Duration</label>
-            <input type="text" id="packageDuration" placeholder="Half Day / 5 Days / Flexible" />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="packageImageFile">Package Image</label>
-            <input type="file" id="packageImageFile" accept="image/*" />
-            <input type="hidden" id="packageImageUrl" />
-            <small class="field-help">Upload a JPG, PNG, or WEBP image.</small>
-          </div>
-
-          <div class="form-group">
-            <label for="packageFeatured">Featured</label>
-            <select id="packageFeatured">
-              <option value="false">No</option>
-              <option value="true">Yes</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="packageShortDescription">Short Description</label>
-          <textarea id="packageShortDescription" rows="3" placeholder="Short summary for cards and quick previews"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="packageFullDescription">Full Description</label>
-          <textarea id="packageFullDescription" rows="6" placeholder="Detailed description for the package"></textarea>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="packageActive">Status</label>
-            <select id="packageActive">
-              <option value="true">Active</option>
-              <option value="false">Inactive</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="package-form-actions">
-          <button type="submit" class="primary-btn" id="packageSubmitBtn">Save Package</button>
-          <button type="button" class="secondary-btn" id="packageResetBtn">Reset</button>
-        </div>
-      </form>
+      <div class="bookings-tools">
+        <input
+          type="text"
+          id="packageSearch"
+          class="booking-search"
+          placeholder="Search packages..."
+        />
+        <button class="primary-btn" id="refreshPackagesBtn" type="button">Refresh</button>
+        <button class="primary-btn" id="openPackageModalBtn" type="button">Add Package</button>
+      </div>
     </div>
 
-    <div class="panel-card">
-      <div class="panel-head panel-head-stack">
-        <div>
-          <h2>Current Packages</h2>
-          <span class="badge">Database List</span>
-        </div>
+    <p id="packageStatusMessage" class="admin-info-message"></p>
 
-        <div class="bookings-tools">
-          <input
-            type="text"
-            id="packageSearch"
-            class="booking-search"
-            placeholder="Search packages..."
-          />
-          <button class="primary-btn" id="refreshPackagesBtn" type="button">Refresh</button>
-        </div>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Category</th>
-              <th>Location</th>
-              <th>Price</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="packagesTableBody">
-            <tr>
-              <td colspan="7">Loading packages...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Location</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="packagesTableBody">
+          <tr>
+            <td colspan="7">Loading packages...</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </section>
+
+<div class="admin-modal" id="packageEditorModal">
+  <div class="admin-modal-backdrop" id="packageEditorBackdrop"></div>
+
+  <div class="admin-modal-dialog">
+    <div class="admin-modal-header">
+      <div>
+        <span class="badge gold">Package Editor</span>
+        <h2 id="packageFormTitle">Add New Package</h2>
+      </div>
+
+      <button type="button" class="admin-modal-close" id="closePackageModalBtn" aria-label="Close">
+        &times;
+      </button>
+    </div>
+
+    <p id="packageEditorMessage" class="admin-info-message"></p>
+
+    <form class="admin-form admin-form-modal" id="packageForm">
+      <input type="hidden" id="packageId" />
+      <input type="hidden" id="packageImageUrl" />
+
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label for="packageTitle">Title</label>
+          <input type="text" id="packageTitle" placeholder="Enter package title" required />
+        </div>
+
+        <div class="form-group">
+          <label for="packageSlug">Slug</label>
+          <input type="text" id="packageSlug" placeholder="example-package-name" />
+        </div>
+      </div>
+
+      <div class="form-grid-3">
+        <div class="form-group">
+          <label for="packageCategory">Category</label>
+          <select id="packageCategory" required>
+            <option value="">Select category</option>
+            <option value="day_tour">Day Tour</option>
+            <option value="holiday_package">Holiday Package</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="packageLocation">Location</label>
+          <select id="packageLocation" required>
+            <option value="">Select location</option>
+            <option value="zanzibar">Zanzibar</option>
+            <option value="tanzania">Tanzania</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="packageDuration">Duration</label>
+          <input type="text" id="packageDuration" placeholder="3 hours / 7 Days / Full Day" />
+        </div>
+      </div>
+
+      <div class="form-grid-3">
+        <div class="form-group">
+          <label for="packagePrice">Price</label>
+          <input type="text" id="packagePrice" placeholder="$120 or Custom Quote" />
+        </div>
+
+        <div class="form-group holiday-only-field">
+          <label for="packageChildPrice">Child Price</label>
+          <input type="text" id="packageChildPrice" placeholder="$80" />
+        </div>
+
+        <div class="form-group">
+          <label for="packageRating">Rating</label>
+          <input type="text" id="packageRating" placeholder="5-Star or 5" />
+        </div>
+      </div>
+
+      <div class="form-grid-3">
+        <div class="form-group">
+          <label for="packageFeatured">Featured</label>
+          <select id="packageFeatured">
+            <option value="false">No</option>
+            <option value="true">Yes</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="packageActive">Status</label>
+          <select id="packageActive">
+            <option value="true">Active</option>
+            <option value="false">Inactive</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="packageImageFile">Image</label>
+          <input type="file" id="packageImageFile" accept="image/*" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="packageShortDescription">Short Description</label>
+        <textarea id="packageShortDescription" rows="3" placeholder="Short summary for cards"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="packageFullDescription">Overview / Full Description</label>
+        <textarea id="packageFullDescription" rows="5" placeholder="Main description / overview"></textarea>
+      </div>
+
+      <div class="form-group day-only-field">
+        <label for="packageDetails">Tour Details (HTML/text allowed)</label>
+        <textarea id="packageDetails" rows="8" placeholder="Detailed day tour content"></textarea>
+      </div>
+
+      <div class="form-group holiday-only-field">
+        <label for="packageFeatures">Features (one per line)</label>
+        <textarea id="packageFeatures" rows="5" placeholder="Long Stay&#10;Beach Days&#10;Stone Town"></textarea>
+      </div>
+
+      <div class="form-group holiday-only-field">
+        <label for="packageHighlights">Highlights (one per line)</label>
+        <textarea id="packageHighlights" rows="5" placeholder="Extended island stay&#10;Stone Town and Prison Island"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="packageItinerary">Itinerary (one line each: Day|Title|Description)</label>
+        <textarea id="packageItinerary" rows="8" placeholder="1|Arrival|Airport transfer and resort check-in.&#10;2|Stone Town|Guided historic town experience."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="packageInclusions">Inclusions (one per line)</label>
+        <textarea id="packageInclusions" rows="5" placeholder="Airport transfers&#10;Guided tour"></textarea>
+      </div>
+
+      <div class="form-group holiday-only-field">
+        <label for="packageEssentials">Essentials (one per line)</label>
+        <textarea id="packageEssentials" rows="5" placeholder="Deposit required&#10;Flights not included"></textarea>
+      </div>
+
+      <div class="package-form-actions">
+        <button type="submit" class="primary-btn" id="packageSubmitBtn">Save Package</button>
+        <button type="button" class="secondary-btn" id="packageResetBtn">Reset</button>
+      </div>
+    </form>
+  </div>
+</div>
 
       <section class="page-section" id="agentsSection">
         <div class="panel-card">

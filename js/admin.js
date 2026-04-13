@@ -2,6 +2,9 @@ if (localStorage.getItem("max_admin_logged_in") !== "true") {
   window.location.href = "admin-login.html";
 }
 
+/* =========================
+   DOM REFERENCES
+========================= */
 const adminUserText = document.getElementById("adminUserText");
 const logoutBtn = document.getElementById("logoutBtn");
 const navLinks = document.querySelectorAll(".nav-link");
@@ -13,25 +16,54 @@ const sidebar = document.getElementById("sidebar");
 const mobileClose = document.getElementById("mobileClose");
 const sidebarBackdrop = document.getElementById("sidebarBackdrop");
 
+/* Bookings */
 const bookingsTableBody = document.getElementById("bookingsTableBody");
 const bookingStatusMessage = document.getElementById("bookingStatusMessage");
 const bookingSearch = document.getElementById("bookingSearch");
 const refreshBookingsBtn = document.getElementById("refreshBookingsBtn");
 
-const packageForm = document.getElementById("packageForm");
-const packageFormTitle = document.getElementById("packageFormTitle");
-const packageStatusMessage = document.getElementById("packageStatusMessage");
+/* Packages table/list */
 const packagesTableBody = document.getElementById("packagesTableBody");
+const packageStatusMessage = document.getElementById("packageStatusMessage");
 const packageSearch = document.getElementById("packageSearch");
 const refreshPackagesBtn = document.getElementById("refreshPackagesBtn");
+const openPackageModalBtn = document.getElementById("openPackageModalBtn");
+
+/* Package modal/editor */
+const packageEditorModal = document.getElementById("packageEditorModal");
+const packageEditorBackdrop = document.getElementById("packageEditorBackdrop");
+const closePackageModalBtn = document.getElementById("closePackageModalBtn");
+const packageEditorMessage = document.getElementById("packageEditorMessage");
+const packageForm = document.getElementById("packageForm");
+const packageFormTitle = document.getElementById("packageFormTitle");
 const packageResetBtn = document.getElementById("packageResetBtn");
 const packageSubmitBtn = document.getElementById("packageSubmitBtn");
 
-const adminUser = localStorage.getItem("max_admin_user") || "@maxtours";
+/* Package form fields */
+const packageIdEl = document.getElementById("packageId");
+const packageTitleEl = document.getElementById("packageTitle");
+const packageSlugEl = document.getElementById("packageSlug");
+const packageCategoryEl = document.getElementById("packageCategory");
+const packageLocationEl = document.getElementById("packageLocation");
+const packagePriceEl = document.getElementById("packagePrice");
+const packageChildPriceEl = document.getElementById("packageChildPrice");
+const packageDurationEl = document.getElementById("packageDuration");
+const packageRatingEl = document.getElementById("packageRating");
+const packageImageFileEl = document.getElementById("packageImageFile");
+const packageImageUrlEl = document.getElementById("packageImageUrl");
+const packageFeaturedEl = document.getElementById("packageFeatured");
+const packageActiveEl = document.getElementById("packageActive");
+const packageShortDescriptionEl = document.getElementById("packageShortDescription");
+const packageFullDescriptionEl = document.getElementById("packageFullDescription");
+const packageDetailsEl = document.getElementById("packageDetails");
+const packageFeaturesEl = document.getElementById("packageFeatures");
+const packageHighlightsEl = document.getElementById("packageHighlights");
+const packageItineraryEl = document.getElementById("packageItinerary");
+const packageInclusionsEl = document.getElementById("packageInclusions");
+const packageEssentialsEl = document.getElementById("packageEssentials");
 
-if (adminUserText) {
-  adminUserText.textContent = adminUser;
-}
+const adminUser = localStorage.getItem("max_admin_user") || "@maxtours";
+if (adminUserText) adminUserText.textContent = adminUser;
 
 let allBookings = [];
 let allPackages = [];
@@ -61,15 +93,11 @@ function openSection(sectionId) {
 }
 
 navLinks.forEach((link) => {
-  link.addEventListener("click", () => {
-    openSection(link.dataset.target);
-  });
+  link.addEventListener("click", () => openSection(link.dataset.target));
 });
 
 quickButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    openSection(button.dataset.target);
-  });
+  button.addEventListener("click", () => openSection(button.dataset.target));
 });
 
 if (logoutBtn) {
@@ -131,12 +159,41 @@ function formatDateTime(value) {
 }
 
 function slugify(text = "") {
-  return text
+  return String(text)
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9\s-]/g, "")
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
+}
+
+function parseLines(text = "") {
+  return String(text)
+    .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function parseItinerary(text = "") {
+  return String(text)
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line, index) => {
+      const [day, title, ...rest] = line.split("|");
+      return {
+        day: Number(day) || index + 1,
+        title: (title || `Step ${index + 1}`).trim(),
+        desc: rest.join("|").trim()
+      };
+    });
+}
+
+function stringifyItinerary(items = []) {
+  if (!Array.isArray(items)) return "";
+  return items
+    .map((item, index) => `${item.day || index + 1}|${item.title || ""}|${item.desc || ""}`)
+    .join("\n");
 }
 
 function setBookingMessage(message = "", type = "") {
@@ -147,10 +204,17 @@ function setBookingMessage(message = "", type = "") {
 }
 
 function setPackageMessage(message = "", type = "") {
-  if (!packageStatusMessage) return;
-  packageStatusMessage.textContent = message;
-  packageStatusMessage.className = "admin-info-message";
-  if (type) packageStatusMessage.classList.add(type);
+  if (packageStatusMessage) {
+    packageStatusMessage.textContent = message;
+    packageStatusMessage.className = "admin-info-message";
+    if (type) packageStatusMessage.classList.add(type);
+  }
+
+  if (packageEditorMessage) {
+    packageEditorMessage.textContent = message;
+    packageEditorMessage.className = "admin-info-message";
+    if (type) packageEditorMessage.classList.add(type);
+  }
 }
 
 /* =========================
@@ -228,7 +292,6 @@ function bindBookingActionButtons() {
       const bookingId = Number(button.dataset.saveBookingId);
       const select = document.querySelector(`select[data-booking-id="${bookingId}"]`);
       const newStatus = select ? select.value : "pending";
-
       await updateBookingStatus(bookingId, newStatus, button);
     });
   });
@@ -238,7 +301,6 @@ function bindBookingActionButtons() {
       const bookingId = Number(button.dataset.deleteBookingId);
       const confirmed = window.confirm(`Delete booking #${bookingId}? This action cannot be undone.`);
       if (!confirmed) return;
-
       await deleteBooking(bookingId, button);
     });
   });
@@ -361,8 +423,35 @@ if (refreshBookingsBtn) {
 }
 
 /* =========================
-   PACKAGES
+   PACKAGES MODAL / FORM
 ========================= */
+function openPackageEditorModal() {
+  if (packageEditorModal) {
+    packageEditorModal.classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
+}
+
+function closePackageEditorModal() {
+  if (packageEditorModal) {
+    packageEditorModal.classList.remove("active");
+    document.body.style.overflow = "";
+  }
+}
+
+function toggleCategoryFields(categoryValue) {
+  const holidayFields = document.querySelectorAll(".holiday-only-field");
+  const dayFields = document.querySelectorAll(".day-only-field");
+
+  holidayFields.forEach((field) => {
+    field.classList.toggle("hidden-category-field", categoryValue !== "holiday_package");
+  });
+
+  dayFields.forEach((field) => {
+    field.classList.toggle("hidden-category-field", categoryValue !== "day_tour");
+  });
+}
+
 function resetPackageForm() {
   const fields = {
     packageId: "",
@@ -371,10 +460,18 @@ function resetPackageForm() {
     packageCategory: "",
     packageLocation: "",
     packagePrice: "",
+    packageChildPrice: "",
     packageDuration: "",
+    packageRating: "",
     packageImageUrl: "",
     packageShortDescription: "",
-    packageFullDescription: ""
+    packageFullDescription: "",
+    packageDetails: "",
+    packageFeatures: "",
+    packageHighlights: "",
+    packageItinerary: "",
+    packageInclusions: "",
+    packageEssentials: ""
   };
 
   Object.entries(fields).forEach(([id, value]) => {
@@ -382,18 +479,48 @@ function resetPackageForm() {
     if (el) el.value = value;
   });
 
-  const packageFeatured = document.getElementById("packageFeatured");
-  const packageActive = document.getElementById("packageActive");
-  const packageImageFile = document.getElementById("packageImageFile");
-
-  if (packageFeatured) packageFeatured.value = "false";
-  if (packageActive) packageActive.value = "true";
-  if (packageImageFile) packageImageFile.value = "";
+  if (packageFeaturedEl) packageFeaturedEl.value = "false";
+  if (packageActiveEl) packageActiveEl.value = "true";
+  if (packageImageFileEl) packageImageFileEl.value = "";
 
   if (packageFormTitle) packageFormTitle.textContent = "Add New Package";
   if (packageSubmitBtn) packageSubmitBtn.textContent = "Save Package";
+
+  setPackageMessage("");
+  toggleCategoryFields("");
 }
 
+async function uploadPackageImage(file) {
+  if (!file) return null;
+
+  if (typeof supabaseClient === "undefined") {
+    throw new Error("Supabase client is not available.");
+  }
+
+  const safeName = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
+  const filePath = `packages/${safeName}`;
+
+  const { error } = await supabaseClient.storage
+    .from("tour-images")
+    .upload(filePath, file, {
+      cacheControl: "3600",
+      upsert: false
+    });
+
+  if (error) {
+    throw error;
+  }
+
+  const { data } = supabaseClient.storage
+    .from("tour-images")
+    .getPublicUrl(filePath);
+
+  return data?.publicUrl || null;
+}
+
+/* =========================
+   PACKAGES TABLE
+========================= */
 async function loadPackagesAdmin() {
   if (typeof supabaseClient === "undefined") {
     setPackageMessage("Supabase client is not available.", "error");
@@ -477,33 +604,39 @@ function bindPackageActionButtons() {
       const pkg = allPackages.find((item) => item.id === packageId);
       if (!pkg) return;
 
-      const setValue = (id, value) => {
-        const el = document.getElementById(id);
+      const setValue = (el, value) => {
         if (el) el.value = value ?? "";
       };
 
-      setValue("packageId", pkg.id);
-      setValue("packageTitle", pkg.title);
-      setValue("packageSlug", pkg.slug);
-      setValue("packageCategory", pkg.category);
-      setValue("packageLocation", pkg.location);
-      setValue("packagePrice", pkg.price);
-      setValue("packageDuration", pkg.duration);
-      setValue("packageImageUrl", pkg.image_url);
-      setValue("packageFeatured", String(!!pkg.is_featured));
-      setValue("packageShortDescription", pkg.short_description);
-      setValue("packageFullDescription", pkg.full_description);
-      setValue("packageActive", String(!!pkg.is_active));
+      setValue(packageIdEl, pkg.id);
+      setValue(packageTitleEl, pkg.title);
+      setValue(packageSlugEl, pkg.slug);
+      setValue(packageCategoryEl, pkg.category);
+      setValue(packageLocationEl, pkg.location);
+      setValue(packagePriceEl, pkg.price);
+      setValue(packageChildPriceEl, pkg.child_price);
+      setValue(packageDurationEl, pkg.duration);
+      setValue(packageRatingEl, pkg.rating);
+      setValue(packageImageUrlEl, pkg.image_url);
+      setValue(packageShortDescriptionEl, pkg.short_description);
+      setValue(packageFullDescriptionEl, pkg.full_description);
+      setValue(packageDetailsEl, pkg.details);
+      setValue(packageFeaturesEl, Array.isArray(pkg.features) ? pkg.features.join("\n") : "");
+      setValue(packageHighlightsEl, Array.isArray(pkg.highlights) ? pkg.highlights.join("\n") : "");
+      setValue(packageItineraryEl, stringifyItinerary(pkg.itinerary));
+      setValue(packageInclusionsEl, Array.isArray(pkg.inclusions) ? pkg.inclusions.join("\n") : "");
+      setValue(packageEssentialsEl, Array.isArray(pkg.essentials) ? pkg.essentials.join("\n") : "");
+      setValue(packageFeaturedEl, String(!!pkg.is_featured));
+      setValue(packageActiveEl, String(!!pkg.is_active));
 
-      const imageFileInput = document.getElementById("packageImageFile");
-      if (imageFileInput) imageFileInput.value = "";
+      if (packageImageFileEl) packageImageFileEl.value = "";
 
       if (packageFormTitle) packageFormTitle.textContent = `Edit Package #${pkg.id}`;
       if (packageSubmitBtn) packageSubmitBtn.textContent = "Update Package";
 
+      toggleCategoryFields(pkg.category || "");
       setPackageMessage(`Editing package #${pkg.id}.`, "success");
-      openSection("packagesSection");
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      openPackageEditorModal();
     });
   });
 
@@ -512,38 +645,9 @@ function bindPackageActionButtons() {
       const packageId = Number(button.dataset.deletePackageId);
       const confirmed = window.confirm(`Delete package #${packageId}?`);
       if (!confirmed) return;
-
       await deletePackage(packageId, button);
     });
   });
-}
-
-async function uploadPackageImage(file) {
-  if (!file) return null;
-
-  if (typeof supabaseClient === "undefined") {
-    throw new Error("Supabase client is not available.");
-  }
-
-  const safeName = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
-  const filePath = `packages/${safeName}`;
-
-  const { error } = await supabaseClient.storage
-    .from("tour-images")
-    .upload(filePath, file, {
-      cacheControl: "3600",
-      upsert: false
-    });
-
-  if (error) {
-    throw error;
-  }
-
-  const { data } = supabaseClient.storage
-    .from("tour-images")
-    .getPublicUrl(filePath);
-
-  return data?.publicUrl || null;
 }
 
 async function savePackage(formValues) {
@@ -552,7 +656,7 @@ async function savePackage(formValues) {
     return;
   }
 
-  const packageId = document.getElementById("packageId")?.value.trim() || "";
+  const packageId = packageIdEl?.value.trim() || "";
 
   const payload = {
     title: formValues.title,
@@ -560,10 +664,18 @@ async function savePackage(formValues) {
     category: formValues.category,
     location: formValues.location,
     price: formValues.price || null,
+    child_price: formValues.child_price || null,
     duration: formValues.duration || null,
+    rating: formValues.rating || null,
     image_url: formValues.image_url || null,
     short_description: formValues.short_description || null,
     full_description: formValues.full_description || null,
+    details: formValues.details || null,
+    features: formValues.features || [],
+    highlights: formValues.highlights || [],
+    itinerary: formValues.itinerary || [],
+    inclusions: formValues.inclusions || [],
+    essentials: formValues.essentials || [],
     is_featured: formValues.is_featured,
     is_active: formValues.is_active
   };
@@ -601,6 +713,7 @@ async function savePackage(formValues) {
   } catch (error) {
     console.error("Failed to save package:", error);
     setPackageMessage(`Failed to save package: ${error.message}`, "error");
+    throw error;
   } finally {
     if (packageSubmitBtn) {
       packageSubmitBtn.disabled = false;
@@ -636,49 +749,57 @@ async function deletePackage(packageId, button) {
   await loadPackagesAdmin();
 }
 
+/* =========================
+   PACKAGE EVENTS
+========================= */
+if (packageTitleEl && packageSlugEl) {
+  packageTitleEl.addEventListener("input", () => {
+    if (!packageIdEl || !packageIdEl.value.trim()) {
+      packageSlugEl.value = slugify(packageTitleEl.value);
+    }
+  });
+}
+
+if (packageCategoryEl) {
+  packageCategoryEl.addEventListener("change", (e) => {
+    toggleCategoryFields(e.target.value);
+  });
+}
+
 if (packageForm) {
-  const packageTitleInput = document.getElementById("packageTitle");
-  const packageSlugInput = document.getElementById("packageSlug");
-
-  if (packageTitleInput && packageSlugInput) {
-    packageTitleInput.addEventListener("input", () => {
-      const packageId = document.getElementById("packageId");
-      if (!packageId || !packageId.value.trim()) {
-        packageSlugInput.value = slugify(packageTitleInput.value);
-      }
-    });
-  }
-
   packageForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     try {
-      let imageUrl = document.getElementById("packageImageUrl")?.value.trim() || "";
-      const imageFileInput = document.getElementById("packageImageFile");
-      const selectedFile = imageFileInput?.files?.[0];
+      let imageUrl = packageImageUrlEl?.value.trim() || "";
+      const selectedFile = packageImageFileEl?.files?.[0];
 
       if (selectedFile) {
         setPackageMessage("Uploading image...", "success");
         imageUrl = await uploadPackageImage(selectedFile);
-
-        const hiddenImageUrlInput = document.getElementById("packageImageUrl");
-        if (hiddenImageUrlInput) {
-          hiddenImageUrlInput.value = imageUrl;
-        }
+        if (packageImageUrlEl) packageImageUrlEl.value = imageUrl;
       }
 
       const values = {
-        title: document.getElementById("packageTitle")?.value.trim() || "",
-        slug: document.getElementById("packageSlug")?.value.trim() || "",
-        category: document.getElementById("packageCategory")?.value || "",
-        location: document.getElementById("packageLocation")?.value || "",
-        price: document.getElementById("packagePrice")?.value.trim() || "",
-        duration: document.getElementById("packageDuration")?.value.trim() || "",
+        title: packageTitleEl?.value.trim() || "",
+        slug: packageSlugEl?.value.trim() || "",
+        category: packageCategoryEl?.value || "",
+        location: packageLocationEl?.value || "",
+        price: packagePriceEl?.value.trim() || "",
+        child_price: packageChildPriceEl?.value.trim() || "",
+        duration: packageDurationEl?.value.trim() || "",
+        rating: packageRatingEl?.value.trim() || "",
         image_url: imageUrl,
-        short_description: document.getElementById("packageShortDescription")?.value.trim() || "",
-        full_description: document.getElementById("packageFullDescription")?.value.trim() || "",
-        is_featured: document.getElementById("packageFeatured")?.value === "true",
-        is_active: document.getElementById("packageActive")?.value === "true"
+        short_description: packageShortDescriptionEl?.value.trim() || "",
+        full_description: packageFullDescriptionEl?.value.trim() || "",
+        details: packageDetailsEl?.value.trim() || "",
+        features: parseLines(packageFeaturesEl?.value || ""),
+        highlights: parseLines(packageHighlightsEl?.value || ""),
+        itinerary: parseItinerary(packageItineraryEl?.value || ""),
+        inclusions: parseLines(packageInclusionsEl?.value || ""),
+        essentials: parseLines(packageEssentialsEl?.value || ""),
+        is_featured: packageFeaturedEl?.value === "true",
+        is_active: packageActiveEl?.value === "true"
       };
 
       if (!values.title || !values.category || !values.location) {
@@ -687,6 +808,7 @@ if (packageForm) {
       }
 
       await savePackage(values);
+      closePackageEditorModal();
     } catch (error) {
       console.error("Package submit failed:", error);
       setPackageMessage(`Package submit failed: ${error.message}`, "error");
@@ -722,7 +844,8 @@ if (packageSearch) {
         pkg.location,
         pkg.price,
         pkg.duration,
-        pkg.short_description
+        pkg.short_description,
+        pkg.rating
       ]
         .filter(Boolean)
         .some((value) => String(value).toLowerCase().includes(query))
@@ -731,6 +854,27 @@ if (packageSearch) {
     renderPackages(filtered);
   });
 }
+
+if (openPackageModalBtn) {
+  openPackageModalBtn.addEventListener("click", () => {
+    resetPackageForm();
+    openPackageEditorModal();
+  });
+}
+
+if (closePackageModalBtn) {
+  closePackageModalBtn.addEventListener("click", closePackageEditorModal);
+}
+
+if (packageEditorBackdrop) {
+  packageEditorBackdrop.addEventListener("click", closePackageEditorModal);
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && packageEditorModal?.classList.contains("active")) {
+    closePackageEditorModal();
+  }
+});
 
 /* =========================
    INITIAL LOAD

@@ -12,11 +12,11 @@ const heroSlides = [
     title: "Adventure, Culture & Beach Escapes"
   },
   {
-    img: "img/Mount Kilimanjaro National Park.jpeg",
+    img: "img/c (304).jpeg",
     title: "Explore Tanzania's Natural Wonders"
   },
   {
-    img: "img/c (51).jpeg",
+    img: "img/c (303).jpeg",
     title: "Create Unforgettable Travel Memories"
   }
 ];
