@@ -75,8 +75,7 @@ const messageStatusMessage = document.getElementById("messageStatusMessage");
 const messageSearch = document.getElementById("messageSearch");
 const refreshMessagesBtn = document.getElementById("refreshMessagesBtn");
 const dashboardMessagesCount = document.getElementById("dashboardMessagesCount");
-
-let allMessages = [];
+const dashboardAgentsCount = document.getElementById("dashboardAgentsCount");
 
 let allAgents = [];
 
@@ -255,15 +254,21 @@ function updateDashboardCounts() {
     const activeCount = allPackages.filter((pkg) => pkg.is_active === true).length;
     dashboardPackagesCount.textContent = String(activeCount);
   }
+
+  if (dashboardAgentsCount) {
+    dashboardAgentsCount.textContent = String(allAgents.length);
+  }
 }
 
 async function loadDashboardStats() {
   if (typeof supabaseClient === "undefined") return;
 
   try {
-    const [bookingsResult, packagesResult] = await Promise.all([
+    const [bookingsResult, packagesResult, agentsResult, messagesResult] = await Promise.all([
       supabaseClient.from("bookings").select("id", { count: "exact", head: false }),
-      supabaseClient.from("packages").select("id, is_active", { count: "exact", head: false })
+      supabaseClient.from("packages").select("id, is_active", { count: "exact", head: false }),
+      supabaseClient.from("agent_applications").select("id, status", { count: "exact", head: false }),
+      supabaseClient.from("contact_messages").select("id, status", { count: "exact", head: false })
     ]);
 
     if (!bookingsResult.error) {
@@ -274,7 +279,16 @@ async function loadDashboardStats() {
       allPackages = Array.isArray(packagesResult.data) ? packagesResult.data : [];
     }
 
+    if (!agentsResult.error) {
+      allAgents = Array.isArray(agentsResult.data) ? agentsResult.data : [];
+    }
+
+    if (!messagesResult.error) {
+      allMessages = Array.isArray(messagesResult.data) ? messagesResult.data : [];
+    }
+
     updateDashboardCounts();
+    updateDashboardMessageCount();
   } catch (error) {
     console.error("Failed to load dashboard stats:", error);
   }
