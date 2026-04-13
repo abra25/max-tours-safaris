@@ -28,11 +28,17 @@ const packageResetBtn = document.getElementById("packageResetBtn");
 const packageSubmitBtn = document.getElementById("packageSubmitBtn");
 
 const adminUser = localStorage.getItem("max_admin_user") || "@maxtours";
-adminUserText.textContent = adminUser;
+
+if (adminUserText) {
+  adminUserText.textContent = adminUser;
+}
 
 let allBookings = [];
 let allPackages = [];
 
+/* =========================
+   GENERAL UI
+========================= */
 function openSection(sectionId) {
   pageSections.forEach((section) => {
     section.classList.toggle("active", section.id === sectionId);
@@ -42,16 +48,16 @@ function openSection(sectionId) {
     link.classList.toggle("active", link.dataset.target === sectionId);
   });
 
-  sidebar.classList.remove("active");
-  sidebarBackdrop.classList.remove("active");
+  if (sidebar) sidebar.classList.remove("active");
+  if (sidebarBackdrop) sidebarBackdrop.classList.remove("active");
 
   if (sectionId === "bookingsSection") {
-  loadBookings();
-}
+    loadBookings();
+  }
 
-if (sectionId === "packagesSection") {
-  loadPackagesAdmin();
-}
+  if (sectionId === "packagesSection") {
+    loadPackagesAdmin();
+  }
 }
 
 navLinks.forEach((link) => {
@@ -66,40 +72,43 @@ quickButtons.forEach((button) => {
   });
 });
 
-logoutBtn.addEventListener("click", () => {
-  localStorage.removeItem("max_admin_logged_in");
-  localStorage.removeItem("max_admin_user");
-  window.location.href = "./admin-login.html";
-});
-
-menuBtn.addEventListener("click", () => {
-  sidebar.classList.add("active");
-  sidebarBackdrop.classList.add("active");
-});
-
-mobileClose.addEventListener("click", () => {
-  sidebar.classList.remove("active");
-  sidebarBackdrop.classList.remove("active");
-});
-
-sidebarBackdrop.addEventListener("click", () => {
-  sidebar.classList.remove("active");
-  sidebarBackdrop.classList.remove("active");
-});
-
-function setBookingMessage(message = "", type = "") {
-  if (!bookingStatusMessage) return;
-  bookingStatusMessage.textContent = message;
-  bookingStatusMessage.className = "admin-info-message";
-  if (type) {
-    bookingStatusMessage.classList.add(type);
-  }
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("max_admin_logged_in");
+    localStorage.removeItem("max_admin_user");
+    window.location.href = "admin-login.html";
+  });
 }
 
+if (menuBtn) {
+  menuBtn.addEventListener("click", () => {
+    if (sidebar) sidebar.classList.add("active");
+    if (sidebarBackdrop) sidebarBackdrop.classList.add("active");
+  });
+}
+
+if (mobileClose) {
+  mobileClose.addEventListener("click", () => {
+    if (sidebar) sidebar.classList.remove("active");
+    if (sidebarBackdrop) sidebarBackdrop.classList.remove("active");
+  });
+}
+
+if (sidebarBackdrop) {
+  sidebarBackdrop.addEventListener("click", () => {
+    if (sidebar) sidebar.classList.remove("active");
+    if (sidebarBackdrop) sidebarBackdrop.classList.remove("active");
+  });
+}
+
+/* =========================
+   HELPERS
+========================= */
 function formatDate(value) {
   if (!value) return "—";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
+
   return date.toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "short",
@@ -111,6 +120,7 @@ function formatDateTime(value) {
   if (!value) return "—";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
+
   return date.toLocaleString("en-GB", {
     day: "2-digit",
     month: "short",
@@ -120,6 +130,32 @@ function formatDateTime(value) {
   });
 }
 
+function slugify(text = "") {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
+function setBookingMessage(message = "", type = "") {
+  if (!bookingStatusMessage) return;
+  bookingStatusMessage.textContent = message;
+  bookingStatusMessage.className = "admin-info-message";
+  if (type) bookingStatusMessage.classList.add(type);
+}
+
+function setPackageMessage(message = "", type = "") {
+  if (!packageStatusMessage) return;
+  packageStatusMessage.textContent = message;
+  packageStatusMessage.className = "admin-info-message";
+  if (type) packageStatusMessage.classList.add(type);
+}
+
+/* =========================
+   BOOKINGS
+========================= */
 function renderBookings(rows) {
   if (!bookingsTableBody) return;
 
@@ -133,7 +169,12 @@ function renderBookings(rows) {
   }
 
   bookingsTableBody.innerHTML = rows.map((booking) => {
-    const guestsCount = `${booking.adults || 0} Adult${(booking.adults || 0) !== 1 ? "s" : ""}${(booking.children || 0) > 0 ? ` / ${booking.children} Child${booking.children !== 1 ? "ren" : ""}` : ""}`;
+    const adults = Number(booking.adults || 0);
+    const children = Number(booking.children || 0);
+
+    const guestsCount = `${adults} Adult${adults !== 1 ? "s" : ""}${
+      children > 0 ? ` / ${children} Child${children !== 1 ? "ren" : ""}` : ""
+    }`;
 
     return `
       <tr>
@@ -160,17 +201,17 @@ function renderBookings(rows) {
         <td>
           <div class="booking-actions-stack">
             <select class="status-select" data-booking-id="${booking.id}">
-            <option value="pending" ${booking.status === "pending" ? "selected" : ""}>Pending</option>
-            <option value="confirmed" ${booking.status === "confirmed" ? "selected" : ""}>Confirmed</option>
-            <option value="rejected" ${booking.status === "rejected" ? "selected" : ""}>Rejected</option>
-        </select>
+              <option value="pending" ${booking.status === "pending" ? "selected" : ""}>Pending</option>
+              <option value="confirmed" ${booking.status === "confirmed" ? "selected" : ""}>Confirmed</option>
+              <option value="rejected" ${booking.status === "rejected" ? "selected" : ""}>Rejected</option>
+            </select>
 
-        <div class="booking-row-actions">
-           <button class="table-action-btn" data-save-booking-id="${booking.id}">Save</button>
-           <button class="table-delete-btn" data-delete-booking-id="${booking.id}">Delete</button>
-        </div>
-    </div>
-</td>
+            <div class="booking-row-actions">
+              <button class="table-action-btn" data-save-booking-id="${booking.id}">Save</button>
+              <button class="table-delete-btn" data-delete-booking-id="${booking.id}">Delete</button>
+            </div>
+          </div>
+        </td>
       </tr>
     `;
   }).join("");
@@ -196,7 +237,6 @@ function bindBookingActionButtons() {
     button.addEventListener("click", async () => {
       const bookingId = Number(button.dataset.deleteBookingId);
       const confirmed = window.confirm(`Delete booking #${bookingId}? This action cannot be undone.`);
-
       if (!confirmed) return;
 
       await deleteBooking(bookingId, button);
@@ -220,6 +260,7 @@ async function loadBookings() {
   if (error) {
     console.error("Failed to load bookings:", error);
     setBookingMessage(`Failed to load bookings: ${error.message}`, "error");
+
     if (bookingsTableBody) {
       bookingsTableBody.innerHTML = `
         <tr>
@@ -262,6 +303,33 @@ async function updateBookingStatus(bookingId, newStatus, button) {
   await loadBookings();
 }
 
+async function deleteBooking(bookingId, button) {
+  if (typeof supabaseClient === "undefined") {
+    setBookingMessage("Supabase client is not available.", "error");
+    return;
+  }
+
+  const oldText = button.textContent;
+  button.disabled = true;
+  button.textContent = "Deleting...";
+
+  const { error } = await supabaseClient
+    .from("bookings")
+    .delete()
+    .eq("id", bookingId);
+
+  if (error) {
+    console.error("Failed to delete booking:", error);
+    setBookingMessage(`Failed to delete booking #${bookingId}: ${error.message}`, "error");
+    button.disabled = false;
+    button.textContent = oldText;
+    return;
+  }
+
+  setBookingMessage(`Booking #${bookingId} deleted successfully.`, "success");
+  await loadBookings();
+}
+
 if (bookingSearch) {
   bookingSearch.addEventListener("input", () => {
     const query = bookingSearch.value.trim().toLowerCase();
@@ -292,31 +360,190 @@ if (refreshBookingsBtn) {
   refreshBookingsBtn.addEventListener("click", loadBookings);
 }
 
-async function deleteBooking(bookingId, button) {
+/* =========================
+   PACKAGES
+========================= */
+function resetPackageForm() {
+  const fields = {
+    packageId: "",
+    packageTitle: "",
+    packageSlug: "",
+    packageCategory: "",
+    packageLocation: "",
+    packagePrice: "",
+    packageDuration: "",
+    packageImageUrl: "",
+    packageShortDescription: "",
+    packageFullDescription: ""
+  };
+
+  Object.entries(fields).forEach(([id, value]) => {
+    const el = document.getElementById(id);
+    if (el) el.value = value;
+  });
+
+  const packageFeatured = document.getElementById("packageFeatured");
+  const packageActive = document.getElementById("packageActive");
+  const packageImageFile = document.getElementById("packageImageFile");
+
+  if (packageFeatured) packageFeatured.value = "false";
+  if (packageActive) packageActive.value = "true";
+  if (packageImageFile) packageImageFile.value = "";
+
+  if (packageFormTitle) packageFormTitle.textContent = "Add New Package";
+  if (packageSubmitBtn) packageSubmitBtn.textContent = "Save Package";
+}
+
+async function loadPackagesAdmin() {
   if (typeof supabaseClient === "undefined") {
-    setBookingMessage("Supabase client is not available.", "error");
+    setPackageMessage("Supabase client is not available.", "error");
     return;
   }
 
-  const oldText = button.textContent;
-  button.disabled = true;
-  button.textContent = "Deleting...";
+  setPackageMessage("Loading packages...");
 
-  const { error } = await supabaseClient
-    .from("bookings")
-    .delete()
-    .eq("id", bookingId);
+  const { data, error } = await supabaseClient
+    .from("packages")
+    .select("*")
+    .order("created_at", { ascending: false });
 
   if (error) {
-    console.error("Failed to delete booking:", error);
-    setBookingMessage(`Failed to delete booking #${bookingId}: ${error.message}`, "error");
-    button.disabled = false;
-    button.textContent = oldText;
+    console.error("Failed to load packages:", error);
+    setPackageMessage(`Failed to load packages: ${error.message}`, "error");
+
+    if (packagesTableBody) {
+      packagesTableBody.innerHTML = `
+        <tr>
+          <td colspan="7">Could not load packages.</td>
+        </tr>
+      `;
+    }
     return;
   }
 
-  setBookingMessage(`Booking #${bookingId} deleted successfully.`, "success");
-  await loadBookings();
+  allPackages = Array.isArray(data) ? data : [];
+  renderPackages(allPackages);
+  setPackageMessage(`Loaded ${allPackages.length} package(s).`, "success");
+}
+
+function renderPackages(rows) {
+  if (!packagesTableBody) return;
+
+  if (!rows.length) {
+    packagesTableBody.innerHTML = `
+      <tr>
+        <td colspan="7">No packages found.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  packagesTableBody.innerHTML = rows.map((pkg) => `
+    <tr>
+      <td>${pkg.id}</td>
+      <td>
+        <div class="package-title-cell">
+          <strong>${pkg.title || "—"}</strong>
+          <span>${pkg.duration || "No duration"}</span>
+        </div>
+      </td>
+      <td>${pkg.category || "—"}</td>
+      <td>${pkg.location || "—"}</td>
+      <td>${pkg.price || "—"}</td>
+      <td>
+        <span class="status ${pkg.is_active ? "confirmed" : "rejected"}">
+          ${pkg.is_active ? "active" : "inactive"}
+        </span>
+      </td>
+      <td>
+        <div class="package-actions">
+          <button class="table-edit-btn" data-edit-package-id="${pkg.id}">Edit</button>
+          <button class="table-delete-btn" data-delete-package-id="${pkg.id}">Delete</button>
+        </div>
+      </td>
+    </tr>
+  `).join("");
+
+  bindPackageActionButtons();
+}
+
+function bindPackageActionButtons() {
+  const editButtons = document.querySelectorAll("[data-edit-package-id]");
+  const deleteButtons = document.querySelectorAll("[data-delete-package-id]");
+
+  editButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const packageId = Number(button.dataset.editPackageId);
+      const pkg = allPackages.find((item) => item.id === packageId);
+      if (!pkg) return;
+
+      const setValue = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.value = value ?? "";
+      };
+
+      setValue("packageId", pkg.id);
+      setValue("packageTitle", pkg.title);
+      setValue("packageSlug", pkg.slug);
+      setValue("packageCategory", pkg.category);
+      setValue("packageLocation", pkg.location);
+      setValue("packagePrice", pkg.price);
+      setValue("packageDuration", pkg.duration);
+      setValue("packageImageUrl", pkg.image_url);
+      setValue("packageFeatured", String(!!pkg.is_featured));
+      setValue("packageShortDescription", pkg.short_description);
+      setValue("packageFullDescription", pkg.full_description);
+      setValue("packageActive", String(!!pkg.is_active));
+
+      const imageFileInput = document.getElementById("packageImageFile");
+      if (imageFileInput) imageFileInput.value = "";
+
+      if (packageFormTitle) packageFormTitle.textContent = `Edit Package #${pkg.id}`;
+      if (packageSubmitBtn) packageSubmitBtn.textContent = "Update Package";
+
+      setPackageMessage(`Editing package #${pkg.id}.`, "success");
+      openSection("packagesSection");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      const packageId = Number(button.dataset.deletePackageId);
+      const confirmed = window.confirm(`Delete package #${packageId}?`);
+      if (!confirmed) return;
+
+      await deletePackage(packageId, button);
+    });
+  });
+}
+
+async function uploadPackageImage(file) {
+  if (!file) return null;
+
+  if (typeof supabaseClient === "undefined") {
+    throw new Error("Supabase client is not available.");
+  }
+
+  const safeName = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
+  const filePath = `packages/${safeName}`;
+
+  const { error } = await supabaseClient.storage
+    .from("tour-images")
+    .upload(filePath, file, {
+      cacheControl: "3600",
+      upsert: false
+    });
+
+  if (error) {
+    throw error;
+  }
+
+  const { data } = supabaseClient.storage
+    .from("tour-images")
+    .getPublicUrl(filePath);
+
+  return data?.publicUrl || null;
 }
 
 async function savePackage(formValues) {
@@ -325,7 +552,7 @@ async function savePackage(formValues) {
     return;
   }
 
-  const packageId = document.getElementById("packageId").value.trim();
+  const packageId = document.getElementById("packageId")?.value.trim() || "";
 
   const payload = {
     title: formValues.title,
@@ -341,28 +568,28 @@ async function savePackage(formValues) {
     is_active: formValues.is_active
   };
 
-  packageSubmitBtn.disabled = true;
-  packageSubmitBtn.textContent = packageId ? "Updating..." : "Saving...";
+  if (packageSubmitBtn) {
+    packageSubmitBtn.disabled = true;
+    packageSubmitBtn.textContent = packageId ? "Updating..." : "Saving...";
+  }
 
   try {
-    let error = null;
+    let result;
 
     if (packageId) {
-      const result = await supabaseClient
+      result = await supabaseClient
         .from("packages")
         .update(payload)
         .eq("id", Number(packageId));
-
-      error = result.error;
     } else {
-      const result = await supabaseClient
+      result = await supabaseClient
         .from("packages")
         .insert([payload]);
-
-      error = result.error;
     }
 
-    if (error) throw error;
+    if (result.error) {
+      throw result.error;
+    }
 
     setPackageMessage(
       packageId ? `Package #${packageId} updated successfully.` : "Package added successfully.",
@@ -375,8 +602,10 @@ async function savePackage(formValues) {
     console.error("Failed to save package:", error);
     setPackageMessage(`Failed to save package: ${error.message}`, "error");
   } finally {
-    packageSubmitBtn.disabled = false;
-    packageSubmitBtn.textContent = "Save Package";
+    if (packageSubmitBtn) {
+      packageSubmitBtn.disabled = false;
+      packageSubmitBtn.textContent = "Save Package";
+    }
   }
 }
 
@@ -411,35 +640,57 @@ if (packageForm) {
   const packageTitleInput = document.getElementById("packageTitle");
   const packageSlugInput = document.getElementById("packageSlug");
 
-  packageTitleInput.addEventListener("input", () => {
-    if (!document.getElementById("packageId").value.trim()) {
-      packageSlugInput.value = slugify(packageTitleInput.value);
-    }
-  });
+  if (packageTitleInput && packageSlugInput) {
+    packageTitleInput.addEventListener("input", () => {
+      const packageId = document.getElementById("packageId");
+      if (!packageId || !packageId.value.trim()) {
+        packageSlugInput.value = slugify(packageTitleInput.value);
+      }
+    });
+  }
 
   packageForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const values = {
-      title: document.getElementById("packageTitle").value.trim(),
-      slug: document.getElementById("packageSlug").value.trim(),
-      category: document.getElementById("packageCategory").value,
-      location: document.getElementById("packageLocation").value,
-      price: document.getElementById("packagePrice").value.trim(),
-      duration: document.getElementById("packageDuration").value.trim(),
-      image_url: document.getElementById("packageImageUrl").value.trim(),
-      short_description: document.getElementById("packageShortDescription").value.trim(),
-      full_description: document.getElementById("packageFullDescription").value.trim(),
-      is_featured: document.getElementById("packageFeatured").value === "true",
-      is_active: document.getElementById("packageActive").value === "true"
-    };
+    try {
+      let imageUrl = document.getElementById("packageImageUrl")?.value.trim() || "";
+      const imageFileInput = document.getElementById("packageImageFile");
+      const selectedFile = imageFileInput?.files?.[0];
 
-    if (!values.title || !values.category || !values.location) {
-      setPackageMessage("Please complete title, category, and location.", "error");
-      return;
+      if (selectedFile) {
+        setPackageMessage("Uploading image...", "success");
+        imageUrl = await uploadPackageImage(selectedFile);
+
+        const hiddenImageUrlInput = document.getElementById("packageImageUrl");
+        if (hiddenImageUrlInput) {
+          hiddenImageUrlInput.value = imageUrl;
+        }
+      }
+
+      const values = {
+        title: document.getElementById("packageTitle")?.value.trim() || "",
+        slug: document.getElementById("packageSlug")?.value.trim() || "",
+        category: document.getElementById("packageCategory")?.value || "",
+        location: document.getElementById("packageLocation")?.value || "",
+        price: document.getElementById("packagePrice")?.value.trim() || "",
+        duration: document.getElementById("packageDuration")?.value.trim() || "",
+        image_url: imageUrl,
+        short_description: document.getElementById("packageShortDescription")?.value.trim() || "",
+        full_description: document.getElementById("packageFullDescription")?.value.trim() || "",
+        is_featured: document.getElementById("packageFeatured")?.value === "true",
+        is_active: document.getElementById("packageActive")?.value === "true"
+      };
+
+      if (!values.title || !values.category || !values.location) {
+        setPackageMessage("Please complete title, category, and location.", "error");
+        return;
+      }
+
+      await savePackage(values);
+    } catch (error) {
+      console.error("Package submit failed:", error);
+      setPackageMessage(`Package submit failed: ${error.message}`, "error");
     }
-
-    await savePackage(values);
   });
 }
 
@@ -481,6 +732,12 @@ if (packageSearch) {
   });
 }
 
+/* =========================
+   INITIAL LOAD
+========================= */
 loadBookings();
 loadPackagesAdmin();
-lucide.createIcons();
+
+if (typeof lucide !== "undefined") {
+  lucide.createIcons();
+}

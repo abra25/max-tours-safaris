@@ -766,3 +766,10 @@ tbody td {
   color: var(--muted);
   font-size: 0.86rem;
 }
+
+.field-help {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
