@@ -16,6 +16,10 @@ const sidebar = document.getElementById("sidebar");
 const mobileClose = document.getElementById("mobileClose");
 const sidebarBackdrop = document.getElementById("sidebarBackdrop");
 
+/* Dashboard stats */
+const dashboardBookingsCount = document.getElementById("dashboardBookingsCount");
+const dashboardPackagesCount = document.getElementById("dashboardPackagesCount");
+
 /* Bookings */
 const bookingsTableBody = document.getElementById("bookingsTableBody");
 const bookingStatusMessage = document.getElementById("bookingStatusMessage");
@@ -89,6 +93,10 @@ function openSection(sectionId) {
 
   if (sectionId === "packagesSection") {
     loadPackagesAdmin();
+  }
+
+  if (sectionId === "dashboardSection") {
+    loadDashboardStats();
   }
 }
 
@@ -217,6 +225,40 @@ function setPackageMessage(message = "", type = "") {
   }
 }
 
+function updateDashboardCounts() {
+  if (dashboardBookingsCount) {
+    dashboardBookingsCount.textContent = String(allBookings.length);
+  }
+
+  if (dashboardPackagesCount) {
+    const activeCount = allPackages.filter((pkg) => pkg.is_active === true).length;
+    dashboardPackagesCount.textContent = String(activeCount);
+  }
+}
+
+async function loadDashboardStats() {
+  if (typeof supabaseClient === "undefined") return;
+
+  try {
+    const [bookingsResult, packagesResult] = await Promise.all([
+      supabaseClient.from("bookings").select("id", { count: "exact", head: false }),
+      supabaseClient.from("packages").select("id, is_active", { count: "exact", head: false })
+    ]);
+
+    if (!bookingsResult.error) {
+      allBookings = Array.isArray(bookingsResult.data) ? bookingsResult.data : [];
+    }
+
+    if (!packagesResult.error) {
+      allPackages = Array.isArray(packagesResult.data) ? packagesResult.data : [];
+    }
+
+    updateDashboardCounts();
+  } catch (error) {
+    console.error("Failed to load dashboard stats:", error);
+  }
+}
+
 /* =========================
    BOOKINGS
 ========================= */
@@ -335,6 +377,7 @@ async function loadBookings() {
 
   allBookings = Array.isArray(data) ? data : [];
   renderBookings(allBookings);
+  updateDashboardCounts();
   setBookingMessage(`Loaded ${allBookings.length} booking(s).`, "success");
 }
 
@@ -550,6 +593,7 @@ async function loadPackagesAdmin() {
 
   allPackages = Array.isArray(data) ? data : [];
   renderPackages(allPackages);
+  updateDashboardCounts();
   setPackageMessage(`Loaded ${allPackages.length} package(s).`, "success");
 }
 
@@ -881,6 +925,7 @@ document.addEventListener("keydown", (e) => {
 ========================= */
 loadBookings();
 loadPackagesAdmin();
+loadDashboardStats();
 
 if (typeof lucide !== "undefined") {
   lucide.createIcons();
